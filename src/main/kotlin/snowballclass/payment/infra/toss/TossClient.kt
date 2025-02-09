@@ -13,7 +13,7 @@ class TossClient() {
     @Value("\${toss.client-key}")
     private val CLIENT_SECRET:String = ""
     @Bean
-    fun tossClient(): TossService {
+    fun client(): TossService {
         val restClient:RestClient = RestClient.builder().baseUrl("https://api.tosspayments.com/v1/payments/confirm").build()
         val adapter:RestClientAdapter = RestClientAdapter.create(restClient)
         val factory:HttpServiceProxyFactory = HttpServiceProxyFactory.builderFor(adapter).build()
