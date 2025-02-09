@@ -1,7 +1,8 @@
 package snowballclass.payment.framework.web.dto
 
+import java.util.Objects
+
 /**
- * <p>
  * 사용하는 속성값만 정의하였습니다.
  * 객체에 대한 추가 정보
  * @see <a href="https://docs.tosspayments.com/reference">토스문서</a>
@@ -46,6 +47,273 @@ class TossResponse(
      */
     val currency: String,
 
+    /**
+     * 결제수단
+     * 카드, 가상계좌, 간편결제, 휴대폰, 계좌이체, 문화상품권, 도서문화상품권, 게임문화상품권 중 1
+     */
+    val method: String,
+
+    /**
+     * 총 결제금액
+     */
+    val totalAmount: Number,
+
+    /**
+     * 취소할 수 있는 금액
+     * 결제 부분 취소 후 남은 금액
+     * vat, suppliedAmount, taxFreeAmount, taxExemptionAmount 와 함께 변함
+     */
+    var balanceAmount: Number,
+
+    /**
+     * READY, IN_PROGRESS, WAITING_FOR_DEPOSIT, DONE, CANCELED, PARTIAL_CANCELED, ABORTED, EXPIRED 중 1
+     * 상태
+     */
+    val status:String,
+
+    /**
+     * 결제 요청 시간
+     * yyyy-MM-dd'T'HH:mm:ss±hh:mm
+     */
+    val requestedAt: String,
+
+    /**
+     * 결제 승인 시간
+     * yyyy-MM-dd'T'HH:mm:ss±hh:mm
+     */
+    val approvedAt: String,
+
+    /**
+     * 애스크로 사용여부
+     */
+    val useEscrow: Boolean,
+
+    /**
+     * 마지막 거래의 키값
+     * 한 결제 건의 승인 거래와 취소 거래를 구분하는 데 사용됩니다.
+     * 예를 들어 결제 승인 후 부분 취소를 두 번 했다면 마지막 부분 취소 거래의 키값이 할당됩니다. 최대 길이는 64자입니다.
+     */
+    val lastTransactionKey: String,
+
+    /**
+     * 공급가액
+     */
+    val suppliedAmount: Number,
+
+    /**
+     * 부가세
+     * 결제 금액이 10,000원이고, 면세 금액이 3,000원 -> vat = (10000-3000)/11
+     */
+    val vat: Number,
+
+    /**
+     * 문화비 지출여부 ( 계좌이체, 가상계좌 결제에만 적용 )
+     */
+    val cultureExpense: Boolean,
+
+    /**
+     * 결제 금액 중 면세 금액
+     */
+    val taxFreeAmount: Number,
+
+    /**
+     * 과세를 제외한 결제 금액(컵 보증금 등)입니다.
+     * 과세 제외 금액이 있는 카드 결제는 부분 취소가 안 됩니다.
+     */
+    val taxExemptionAmount: Int,
+
+    /**
+     * 결제 취소 이력
+     */
+    val cancels: Cancels? = null,
+
+    /**
+     * 부분취소 가능 여부
+     * t: 가능, f: 불가
+     */
+    val isPartialCancelable: Boolean,
+
+    /**
+     * 카드 결제 정보
+     */
+    val card: Card? = null,
+
+    /**
+     * 가상계좌 정보
+     */
+    val virtualAccount: VirtualAccount? = null,
+
+    /**
+     * 가상계좌 웹 훅
+     */
+    val secret: String,
+
+    /**
+     * 휴대전화 결제
+     */
+    val mobilePhone: MobilePhone? = null,
+
+    /**
+     * 기프트 카드 결제
+     */
+    val giftCertificate: GiftCertificate? = null,
+
+    /**
+     * 계좌이체 결제 시
+     */
+    val transfer: Transfer? = null,
+
+    /**
+     * 결제 요청 시 SDK에서 직접 추가할 수 있는 결제 관련 정보입니다.
+     * 최대 5개의 키 값
+     */
+    val metadata: Objects,
+
+    /**
+     * 영수증
+     */
+    val receipt: Receipt? = null,
+
+    /**
+     * 결제창 정보
+     */
+    val checkout: Checkout? = null,
+
+    /**
+     * 간편결제 정보
+     */
+    val easypay: Easypay? = null,
+
+    /**
+     * 결제한 국가 코드
+     */
+    val country: String,
+
+    /**
+     * 결제 실패 정보
+     */
+    val failure: Failure? = null,
+
+    /**
+     * 현금 영수증 정보
+     */
+    val cashReceipt: CashReceipt? = null,
+
+    /**
+     * 현금 영수증 내역
+     */
+    val cashReceipts: ArrayList<CashReceiptItem>? = null,
+
+    /**
+     * 할인
+     */
+    val discount: Discount? = null
 ) {
 
 }
+class Cancels(
+    val cancelAmount: Number,
+    val cancelReason: String,
+    val taxFreeAmount: Number,
+    val taxExemptionAmount: Int,
+    val refundableAmount: Number,
+    val transferDiscountAmount: Number,
+    val easyPayDiscountAmount: Number,
+    val canceledAt: String,
+    val transactionKey: String,
+    val receiptKey: String,
+    val cancelStatus: String,
+    val cancelRequestId: String
+)
+
+class Card(
+    val amount: Number,
+    val issuerCode: String,
+    val acquirerCode: String,
+    val number: String,
+    val installmentPlanMonths: Int,
+    val approveNo: String,
+    val useCardPoint: Boolean,
+    val cardType: String,
+    val ownerType: String,
+    val acquireStatus: String,
+    val isInterestFee: Boolean,
+    val interestPayer: String
+)
+
+class VirtualAccount(
+    val accountType: String,
+    val accountNumber: String,
+    val bankCode: String,
+    val customerName:String,
+    val dueDate: String,
+    val refundStatus: String,
+    val expired: Boolean,
+    val settlementStatus: String,
+    val refundReceiveAccount: Objects,
+)
+
+class MobilePhone(
+    val customerMobilePhone: String,
+    val settlementStatus: String,
+    val receiptUrl: String
+)
+
+class GiftCertificate(
+    val approveNo: String,
+    val settlementStatus: String
+)
+
+class Transfer(
+    val bankCode: String,
+    val settlementStatus: String
+)
+
+class Receipt(
+    val url:String,
+)
+
+class Checkout(
+    val url:String,
+)
+
+class Easypay(
+    val provider: String,
+    val amount: Number,
+    val discountAmount: Number
+)
+
+class Failure(
+    val code:String,
+    val message:String,
+)
+
+class CashReceipt(
+    val type: String,
+    val receiptKey: String,
+    val issueNumber: String,
+    val receiptUrl: String,
+    val amount: Number,
+    val taxFreeAmount: Number
+)
+
+class CashReceiptItem(
+    val receiptKey: String,
+    val orderId: String,
+    val orderName: String,
+    val type: String,
+    val issuerNumber: String,
+    val receiptUrl: String,
+    val businessNumber: String,
+    val transactionType: String,
+    val amount: Int,
+    val taxFreeAmount: Int,
+    val issueStatus: String,
+    val failure: Objects,
+    val customerIdentityNumber: String,
+    val requestedAt: String,
+)
+
+class Discount(
+    val amount:Int
+)

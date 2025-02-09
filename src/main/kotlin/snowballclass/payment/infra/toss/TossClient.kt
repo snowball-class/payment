@@ -9,12 +9,9 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory
 
 @Configuration
 class TossClient() {
-
-    @Value("\${toss.client-key}")
-    private val CLIENT_SECRET:String = ""
     @Bean
-    fun client(): TossService {
-        val restClient:RestClient = RestClient.builder().baseUrl("https://api.tosspayments.com/v1/payments/confirm").build()
+    fun create(): TossService {
+        val restClient:RestClient = RestClient.builder().baseUrl("https://api.tosspayments.com/v1").build()
         val adapter:RestClientAdapter = RestClientAdapter.create(restClient)
         val factory:HttpServiceProxyFactory = HttpServiceProxyFactory.builderFor(adapter).build()
         return factory.createClient(TossService::class.java)
