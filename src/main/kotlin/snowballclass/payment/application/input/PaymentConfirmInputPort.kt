@@ -1,6 +1,8 @@
 package snowballclass.payment.application.input
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import snowballclass.payment.application.output.PaymentConfirmOutputPort
 import snowballclass.payment.application.usecase.PaymentConfirmUsecase
@@ -29,12 +31,21 @@ class PaymentConfirmInputPort(
         val encoder: Base64.Encoder = Base64.getEncoder()
         val secretKey:String = "Basic " + encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)).toString()
         val data = TossPayRequest()
-        val result = client.confirm(
+        val response:ResponseEntity<TossResponse> = client.confirm(
             secretKey = secretKey,
             contentType = "application/json",
             body = data
         )
+
+        if (response.statusCode.is4xxClientError) {
+            throw RuntimeException(response.body?.failure?.message ?: "결제 시도 중 에러가 발생했습니다")
+        }
+
+        if (response.statusCode.is5xxServerError) {
+            throw RuntimeException(response.body?.failure?.message ?: "결제 서버 에서 에러가 발생했습니다")
+        }
+
         // 확인이 완료되면 저장
-        // ㅇㅋ?
+        // 저장 정책에 대한 정의 필요
     }
 }

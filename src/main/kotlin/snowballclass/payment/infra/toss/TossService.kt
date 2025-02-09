@@ -5,6 +5,7 @@ import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
 import snowballclass.payment.framework.web.dto.TossResponse
 import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
 import snowballclass.payment.framework.web.dto.TossPayRequest
 import java.util.Base64
@@ -16,5 +17,5 @@ interface TossService {
         @RequestHeader(HttpHeaders.AUTHORIZATION) secretKey: String,
         @RequestHeader(HttpHeaders.CONTENT_TYPE) contentType: String,
         @RequestBody body: TossPayRequest
-    ): TossResponse
+    ): ResponseEntity<TossResponse>
 }

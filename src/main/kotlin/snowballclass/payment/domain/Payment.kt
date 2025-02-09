@@ -10,7 +10,8 @@ import java.util.UUID
 @Entity
 class Payment(
     @Id
-    val paymentId: Long,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val paymentId: Long = 0,
     val paymentUUID: UUID,
     @Embedded
     val money: Money,
@@ -19,13 +20,24 @@ class Payment(
     // 마지막 결제 키
     @Embedded
     val card: Card? = null,
-    val lastTransactionKey: String,
     var deleted: Boolean = false,
+    // todo : LocalDate -> ZonedDateTime, OffsetDateTime 고민 필요
     var deletedAt: LocalDate? = null,
-    val updatedAt: LocalDate,
-    val createdAt: LocalDate,
-    val paidAt: LocalDate,
-    val approvedAt: LocalDate
+    val updatedAt: LocalDate = LocalDate.now(),
+    val createdAt: LocalDate = LocalDate.now(),
+    val paidAt: LocalDate? = null,
+    val approvedAt: LocalDate? = null,
 ) {
 
+    companion object {
+        // todo : 모든 결제수단 엔티티 속성 추가 필요
+        fun create():Payment {
+            return Payment(
+                paymentUUID = UUID.randomUUID(),
+                money = Money.create(value = 0),
+                status = PaymentStatus.AWAIT,
+                card = null,
+            )
+        }
+    }
 }
