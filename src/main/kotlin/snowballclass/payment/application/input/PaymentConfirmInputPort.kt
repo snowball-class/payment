@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import snowballclass.payment.application.output.PaymentConfirmOutputPort
 import snowballclass.payment.application.usecase.PaymentConfirmUsecase
+import snowballclass.payment.domain.Payment
 import snowballclass.payment.framework.web.dto.TossPayRequest
 import snowballclass.payment.framework.web.dto.TossResponse
 import snowballclass.payment.infra.toss.TossClient
@@ -30,6 +31,7 @@ class PaymentConfirmInputPort(
         val client:TossService = tossClient.create()
         val encoder: Base64.Encoder = Base64.getEncoder()
         val secretKey:String = "Basic " + encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)).toString()
+        // todo : 데이터 추가
         val data = TossPayRequest()
         val response:ResponseEntity<TossResponse> = client.confirm(
             secretKey = secretKey,
@@ -47,5 +49,6 @@ class PaymentConfirmInputPort(
 
         // 확인이 완료되면 저장
         // 저장 정책에 대한 정의 필요
+        Payment.create()
     }
 }

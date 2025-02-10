@@ -1,5 +1,18 @@
 package snowballclass.payment.framework.web.dto
 
+import snowballclass.payment.domain.model.vo.CancelInfo
+import snowballclass.payment.domain.model.vo.Card
+import snowballclass.payment.domain.model.vo.CashReceipt
+import snowballclass.payment.domain.model.vo.CashReceiptItem
+import snowballclass.payment.domain.model.vo.Checkout
+import snowballclass.payment.domain.model.vo.Discount
+import snowballclass.payment.domain.model.vo.Easypay
+import snowballclass.payment.domain.model.vo.Failure
+import snowballclass.payment.domain.model.vo.GiftCertificate
+import snowballclass.payment.domain.model.vo.MobilePhone
+import snowballclass.payment.domain.model.vo.Receipt
+import snowballclass.payment.domain.model.vo.Transfer
+import snowballclass.payment.domain.model.vo.VirtualAccount
 import java.util.Objects
 
 /**
@@ -125,7 +138,7 @@ class TossResponse(
     /**
      * 결제 취소 이력
      */
-    val cancels: Cancels? = null,
+    val cancels: CancelInfo? = null,
 
     /**
      * 부분취소 가능 여부
@@ -211,109 +224,3 @@ class TossResponse(
 ) {
 
 }
-class Cancels(
-    val cancelAmount: Number,
-    val cancelReason: String,
-    val taxFreeAmount: Number,
-    val taxExemptionAmount: Int,
-    val refundableAmount: Number,
-    val transferDiscountAmount: Number,
-    val easyPayDiscountAmount: Number,
-    val canceledAt: String,
-    val transactionKey: String,
-    val receiptKey: String,
-    val cancelStatus: String,
-    val cancelRequestId: String
-)
-
-class Card(
-    val amount: Number,
-    val issuerCode: String,
-    val acquirerCode: String,
-    val number: String,
-    val installmentPlanMonths: Int,
-    val approveNo: String,
-    val useCardPoint: Boolean,
-    val cardType: String,
-    val ownerType: String,
-    val acquireStatus: String,
-    val isInterestFee: Boolean,
-    val interestPayer: String
-)
-
-class VirtualAccount(
-    val accountType: String,
-    val accountNumber: String,
-    val bankCode: String,
-    val customerName:String,
-    val dueDate: String,
-    val refundStatus: String,
-    val expired: Boolean,
-    val settlementStatus: String,
-    val refundReceiveAccount: Objects,
-)
-
-class MobilePhone(
-    val customerMobilePhone: String,
-    val settlementStatus: String,
-    val receiptUrl: String
-)
-
-class GiftCertificate(
-    val approveNo: String,
-    val settlementStatus: String
-)
-
-class Transfer(
-    val bankCode: String,
-    val settlementStatus: String
-)
-
-class Receipt(
-    val url:String,
-)
-
-class Checkout(
-    val url:String,
-)
-
-class Easypay(
-    val provider: String,
-    val amount: Number,
-    val discountAmount: Number
-)
-
-class Failure(
-    val code:String,
-    val message:String,
-)
-
-class CashReceipt(
-    val type: String,
-    val receiptKey: String,
-    val issueNumber: String,
-    val receiptUrl: String,
-    val amount: Number,
-    val taxFreeAmount: Number
-)
-
-class CashReceiptItem(
-    val receiptKey: String,
-    val orderId: String,
-    val orderName: String,
-    val type: String,
-    val issuerNumber: String,
-    val receiptUrl: String,
-    val businessNumber: String,
-    val transactionType: String,
-    val amount: Int,
-    val taxFreeAmount: Int,
-    val issueStatus: String,
-    val failure: Objects,
-    val customerIdentityNumber: String,
-    val requestedAt: String,
-)
-
-class Discount(
-    val amount:Int
-)

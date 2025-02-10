@@ -27,8 +27,8 @@ class Payment(
     val createdAt: LocalDate = LocalDate.now(),
     val paidAt: LocalDate? = null,
     val approvedAt: LocalDate? = null,
+    // todo : 결제 수단은 어떤 것들을 사용할 것인가
 ) {
-
     companion object {
         // todo : 모든 결제수단 엔티티 속성 추가 필요
         fun create():Payment {
