@@ -1,5 +1,6 @@
 package snowballclass.payment.framework.web.dto
 
+import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.model.vo.CancelInfo
 import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.CashReceipt
@@ -138,7 +139,7 @@ class TossResponse(
     /**
      * 결제 취소 이력
      */
-    val cancels: CancelInfo? = null,
+    val cancels: ArrayList<CancelInfo>? = null,
 
     /**
      * 부분취소 가능 여부
@@ -180,7 +181,7 @@ class TossResponse(
      * 결제 요청 시 SDK에서 직접 추가할 수 있는 결제 관련 정보입니다.
      * 최대 5개의 키 값
      */
-    val metadata: Objects,
+    val metadata: Map<String,Any>,
 
     /**
      * 영수증

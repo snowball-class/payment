@@ -8,5 +8,11 @@ enum class PaymentMethod(val label:String) {
 	MOBILE("휴대폰"),
 	CULTURE_GIFT_CERTIFICATE("문화상품권"),
 	BOOK_GIFT_CERTIFICATE("도서문화상품권"),
-	GAME_GIFT_CERTIFICATE("게임문화상품권")
+	GAME_GIFT_CERTIFICATE("게임문화상품권");
+
+	companion object {
+		fun fromLabel(label: String): PaymentMethod {
+			return PaymentMethod.entries.find { it.label == label } ?: throw RuntimeException("해당 타입을 찾을 수 없습니다")
+		}
+	}
 }

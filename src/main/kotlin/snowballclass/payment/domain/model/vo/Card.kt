@@ -1,11 +1,13 @@
 package snowballclass.payment.domain.model.vo
 
 import jakarta.persistence.Embeddable
+import jakarta.persistence.Transient
 import java.io.Serial
 import java.io.Serializable
 
 @Embeddable
 class Card(
+    @Transient
     val amount: Number,
     val issuerCode: String,
     val acquirerCode: String,

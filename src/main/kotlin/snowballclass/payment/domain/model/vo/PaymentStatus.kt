@@ -5,4 +5,5 @@ enum class PaymentStatus(val label:String) {
     SUCCESS("결제완료"),
     CANCEL("취소"),
     REFUND("환불"),
+    ABORTED("반려")
 }

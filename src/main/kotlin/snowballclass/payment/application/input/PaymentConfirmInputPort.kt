@@ -39,6 +39,8 @@ class PaymentConfirmInputPort(
             body = data
         )
 
+        val responseBody:TossResponse? = response.body
+
         if (response.statusCode.is4xxClientError) {
             throw RuntimeException(response.body?.failure?.message ?: "결제 시도 중 에러가 발생했습니다")
         }
@@ -46,9 +48,14 @@ class PaymentConfirmInputPort(
         if (response.statusCode.is5xxServerError) {
             throw RuntimeException(response.body?.failure?.message ?: "결제 서버 에서 에러가 발생했습니다")
         }
+        
+        if (responseBody == null) {
+            throw RuntimeException("결제 서버로부터 잘못된 응답이 도달했습니다")
+        }
 
         // 확인이 완료되면 저장
         // 저장 정책에 대한 정의 필요
-        Payment.create()
+        val payment:Payment = Payment.fromToss(responseBody)
+        paymentConfirmOutputPort.save(payment)
     }
 }
