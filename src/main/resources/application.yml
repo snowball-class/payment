@@ -1,3 +1,20 @@
 spring:
   application:
     name: payment
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  datasource:
+    url: "jdbc:mysql://3.34.177.168/payment"
+    username: test
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+toss:
+  client-key: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"
