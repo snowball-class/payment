@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service
 import snowballclass.payment.application.output.PaymentConfirmOutputPort
 import snowballclass.payment.application.usecase.PaymentConfirmUsecase
 import snowballclass.payment.domain.Payment
+import snowballclass.payment.framework.web.dto.PaymentConfirmInputDto
+import snowballclass.payment.framework.web.dto.PaymentConfirmOutputDto
 import snowballclass.payment.framework.web.dto.TossPayRequest
 import snowballclass.payment.framework.web.dto.TossResponse
 import snowballclass.payment.infra.toss.TossClient
@@ -27,12 +29,14 @@ class PaymentConfirmInputPort(
      * c: client, p: pg사, s: server
      * c(결제요청) -> t(결제수단, 결제가능여부확인) -> c(검증응답확인,실결제요청) -> s(실제결제요청) -> t(실제결제, 응답) -> c
      */
-    override fun confirm(payDto: TossPayRequest) {
+    override fun confirm(payDto: PaymentConfirmInputDto): PaymentConfirmOutputDto  {
         val client:TossService = tossClient.create()
         val encoder: Base64.Encoder = Base64.getEncoder()
-        val secretKey:String = "Basic " + encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)).toString()
+        val secretKey:String = "Basic " + String(encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)))
         // todo : 데이터 추가
-        val data = TossPayRequest()
+        val data = TossPayRequest(
+            orderId = payDto.orderId
+        )
         val response:ResponseEntity<TossResponse> = client.confirm(
             secretKey = secretKey,
             contentType = "application/json",
@@ -57,5 +61,8 @@ class PaymentConfirmInputPort(
         // 저장 정책에 대한 정의 필요
         val payment:Payment = Payment.fromToss(responseBody)
         paymentConfirmOutputPort.save(payment)
+        return PaymentConfirmOutputDto(
+
+        )
     }
 }
