@@ -22,8 +22,8 @@ class Payment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val paymentId: Long = 0,
-    // paymentKey 와 동일
-    val paymentUUID: UUID,
+    val paymentKey: String,
+    val orderId: String,
     @Enumerated(EnumType.STRING)
     val paymentType: PaymentType = PaymentType.NORMAL,
     val paymentName: String,
@@ -71,7 +71,8 @@ class Payment(
         // todo : 모든 결제수단 엔티티 속성 추가 필요
         fun create():Payment {
             return Payment(
-                paymentUUID = UUID.randomUUID(),
+                paymentKey = "",
+                orderId = "",
                 status = PaymentStatus.AWAIT,
                 amount = Amount(
                     totalAmount = 0,
@@ -85,7 +86,8 @@ class Payment(
 
         fun fromToss(response:TossResponse): Payment {
             return Payment(
-                paymentUUID = UUID.fromString(response.paymentKey),
+                paymentKey = response.paymentKey,
+                orderId = response.orderId,
                 paymentType =  PaymentType.fromString(response.type),
                 paymentName = response.orderName,
                 paymentInfo = PaymentInfo(

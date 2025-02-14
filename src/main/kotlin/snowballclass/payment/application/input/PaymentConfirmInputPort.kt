@@ -29,13 +29,15 @@ class PaymentConfirmInputPort(
      * c: client, p: pg사, s: server
      * c(결제요청) -> t(결제수단, 결제가능여부확인) -> c(검증응답확인,실결제요청) -> s(실제결제요청) -> t(실제결제, 응답) -> c
      */
-    override fun confirm(payDto: PaymentConfirmInputDto): PaymentConfirmOutputDto  {
+    override fun confirm(confirmDto: PaymentConfirmInputDto): PaymentConfirmOutputDto  {
         val client:TossService = tossClient.create()
         val encoder: Base64.Encoder = Base64.getEncoder()
         val secretKey:String = "Basic " + String(encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)))
         // todo : 데이터 추가
         val data = TossPayRequest(
-            orderId = payDto.orderId
+            orderId = confirmDto.orderId,
+            amount = confirmDto.amount,
+            paymentKey = confirmDto.paymentKey
         )
         val response:ResponseEntity<TossResponse> = client.confirm(
             secretKey = secretKey,
@@ -44,6 +46,8 @@ class PaymentConfirmInputPort(
         )
 
         val responseBody:TossResponse? = response.body
+
+        println(responseBody)
 
         if (response.statusCode.is4xxClientError) {
             throw RuntimeException(response.body?.failure?.message ?: "결제 시도 중 에러가 발생했습니다")

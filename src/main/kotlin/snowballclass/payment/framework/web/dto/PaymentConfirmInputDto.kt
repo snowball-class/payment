@@ -7,4 +7,6 @@ class PaymentConfirmInputDto(
 	val customerName: String,
 	val customerPhone: String,
 	val customerMobilePhone: String,
+	val paymentKey: String,
+	val amount: Number
 )
