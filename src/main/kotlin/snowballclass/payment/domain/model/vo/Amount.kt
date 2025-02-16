@@ -14,6 +14,7 @@ class Amount(
 	val totalAmount: Long = 0,
 	// 취소할 수 있는 금액
 	val balanceAmount: Long = 0,
+	val discount: Long = 0,
 ):Serializable {
 
 }

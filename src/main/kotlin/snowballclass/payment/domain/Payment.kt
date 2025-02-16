@@ -22,6 +22,7 @@ class Payment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    val memberUUID: UUID,
     val orderId: UUID,
     val paymentKey: String,
     @Enumerated(EnumType.STRING)
@@ -33,7 +34,6 @@ class Payment(
     val paymentMethod: PaymentMethod,
     @Enumerated(value = EnumType.STRING)
     var status: PaymentStatus,
-    // 마지막 결제 키
     val lastTransactionKey: String? = null,
     val isPartialCancelable: Boolean,
     @Embedded
@@ -49,7 +49,6 @@ class Payment(
     val failure: Failure? = null,
     @Embedded
     val cashReceipt: CashReceipt? = null,
-    val discount: Long = 0,
     @Embedded
     val easypay: Easypay? = null,
     var deleted: Boolean = false,
@@ -62,6 +61,7 @@ class Payment(
     companion object {
         fun confirm(payDto:PaymentConfirmInputDto, response:TossResponse): Payment {
             return Payment(
+                memberUUID = payDto.memberUUID,
                 orderId = UUID.fromString(response.orderId),
                 paymentKey = response.paymentKey,
                 paymentType =  PaymentType.fromString(response.type ?: "NORMAL"),
@@ -69,6 +69,7 @@ class Payment(
                 amount = Amount(
                     totalAmount = response.totalAmount ?: 0,
                     balanceAmount = response.balanceAmount ?: 0,
+                    discount = response.discount?.amount ?: 0,
                 ),
                 paymentMethod = PaymentMethod.fromLabel(response.method ?: "카드"),
                 status = PaymentStatus.AWAIT,
@@ -82,7 +83,6 @@ class Payment(
                 checkoutUrl = response.checkout?.url ?: "",
                 failure = response.failure,
                 cashReceipt = response.cashReceipt,
-                discount = response.discount?.amount ?: 0,
                 easypay = response.easypay,
                 paidAt = LocalDate.now(),
             )

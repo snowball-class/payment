@@ -3,17 +3,26 @@ package snowballclass.payment.application.input
 import org.springframework.stereotype.Service
 import snowballclass.payment.application.output.InquiryOutputPort
 import snowballclass.payment.application.usecase.InquiryUsecase
+import snowballclass.payment.domain.Payment
+import snowballclass.payment.domain.PaymentDetail
+import snowballclass.payment.framework.web.dto.GetPaymentOutputDto
+import java.util.UUID
 
 @Service
 class InquiryInputPort(
     private val inquiryOutputPort: InquiryOutputPort
 ):InquiryUsecase {
-    override fun getPayment() {
-        TODO("Not yet implemented")
+    override fun getPaymentList(memberUUID:UUID): List<GetPaymentOutputDto> {
+        val paymentList:List<Payment> = inquiryOutputPort.getPaymentList(memberUUID)
+        return paymentList.map{
+            val paymentDetailList:List<PaymentDetail> = inquiryOutputPort.getPaymentDetailList(it.id)
+            GetPaymentOutputDto.fromPayment(it, paymentDetailList)
+        }
     }
 
-    override fun getPaymentList() {
-        TODO("Not yet implemented")
+    override fun getPayment(orderId:UUID): GetPaymentOutputDto {
+        val payment:Payment = inquiryOutputPort.getPayment(orderId)
+        val paymentDetailList:List<PaymentDetail> = inquiryOutputPort.getPaymentDetailList(payment.id)
+        return GetPaymentOutputDto.fromPayment(payment, paymentDetailList)
     }
-
 }

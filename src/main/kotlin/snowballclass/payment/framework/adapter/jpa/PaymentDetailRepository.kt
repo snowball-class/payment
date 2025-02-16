@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 import snowballclass.payment.domain.PaymentDetail
 
 @Repository
-interface PaymentDetailRepository: JpaRepository<PaymentDetail, Long> {}
+interface PaymentDetailRepository: JpaRepository<PaymentDetail, Long> {
+	fun findByPaymentId(paymentId: Long): List<PaymentDetail>
+}
