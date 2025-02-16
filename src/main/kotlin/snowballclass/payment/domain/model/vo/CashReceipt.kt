@@ -8,6 +8,6 @@ class CashReceipt(
 	val issueNumber: String,
 	val receiptUrl: String,
 	@Transient
-	val amount: Number,
-	val taxFreeAmount: Number
+	val amount: Long,
+	val taxFreeAmount: Long
 )

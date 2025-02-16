@@ -7,6 +7,6 @@ import jakarta.persistence.Transient
 class Easypay(
 	val provider: String,
 	@Transient
-	val amount: Number,
-	val discountAmount: Number
+	val amount: Long,
+	val discountAmount: Long
 )

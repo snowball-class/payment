@@ -13,11 +13,11 @@ class PaymentCancel(
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val cancelId:Long = 0,
-	val cancelAmount: Number,
+	val cancelAmount: Long,
 	val cancelReason: String,
-	val refundableAmount: Number,
-	val transferDiscountAmount: Number,
-	val easyPayDiscountAmount: Number,
+	val refundableAmount: Long,
+	val transferDiscountAmount: Long,
+	val easyPayDiscountAmount: Long,
 	val canceledAt: String,
 	val transactionKey: String,
 	val receiptKey: String,

@@ -4,5 +4,5 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 class Discount(
-	val amount:Int
+	val amount:Long
 )

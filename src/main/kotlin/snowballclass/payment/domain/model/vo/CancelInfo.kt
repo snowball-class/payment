@@ -5,13 +5,13 @@ import java.io.Serializable
 
 @Embeddable
 class CancelInfo(
-	val cancelAmount: Number,
+	val cancelAmount: Long,
 	val cancelReason: String,
-	val taxFreeAmount: Number,
+	val taxFreeAmount: Long,
 	val taxExemptionAmount: Int,
-	val refundableAmount: Number,
-	val transferDiscountAmount: Number,
-	val easyPayDiscountAmount: Number,
+	val refundableAmount: Long,
+	val transferDiscountAmount: Long,
+	val easyPayDiscountAmount: Long,
 	val canceledAt: String,
 	val transactionKey: String,
 	val receiptKey: String,

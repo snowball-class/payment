@@ -25,7 +25,7 @@ class TossResponse(
     /**
      * Payment 객체의 응답 버전입니다. 버전 2022-06-08부터 날짜 기반 버저닝을 사용합니다.
      */
-    val version: String,
+    val version: String?,
 
     /**
      * maxSize 200
@@ -36,7 +36,7 @@ class TossResponse(
     /**
      * NORMAL, BILLING, BRANDPAY 중 1
      */
-    val type: String,
+    val type: String?,
 
     /**
      * minSize 6
@@ -49,92 +49,92 @@ class TossResponse(
     /**
      * 구매 상품명
      */
-    val orderName: String,
+    val orderName: String?,
 
     /**
      * 상점 Id, 토스 발급
      */
-    val mId: String,
+    val mId: String?,
 
     /**
      * 통화
      */
-    val currency: String,
+    val currency: String?,
 
     /**
      * 결제수단
      * 카드, 가상계좌, 간편결제, 휴대폰, 계좌이체, 문화상품권, 도서문화상품권, 게임문화상품권 중 1
      */
-    val method: String,
+    val method: String?,
 
     /**
      * 총 결제금액
      */
-    val totalAmount: Number,
+    val totalAmount: Long?,
 
     /**
      * 취소할 수 있는 금액
      * 결제 부분 취소 후 남은 금액
      * vat, suppliedAmount, taxFreeAmount, taxExemptionAmount 와 함께 변함
      */
-    var balanceAmount: Number,
+    var balanceAmount: Long?,
 
     /**
      * READY, IN_PROGRESS, WAITING_FOR_DEPOSIT, DONE, CANCELED, PARTIAL_CANCELED, ABORTED, EXPIRED 중 1
      * 상태
      */
-    val status:String,
+    val status:String?,
 
     /**
      * 결제 요청 시간
      * yyyy-MM-dd'T'HH:mm:ss±hh:mm
      */
-    val requestedAt: String,
+    val requestedAt: String?,
 
     /**
      * 결제 승인 시간
      * yyyy-MM-dd'T'HH:mm:ss±hh:mm
      */
-    val approvedAt: String,
+    val approvedAt: String?,
 
     /**
      * 애스크로 사용여부
      */
-    val useEscrow: Boolean,
+    val useEscrow: Boolean?,
 
     /**
      * 마지막 거래의 키값
      * 한 결제 건의 승인 거래와 취소 거래를 구분하는 데 사용됩니다.
      * 예를 들어 결제 승인 후 부분 취소를 두 번 했다면 마지막 부분 취소 거래의 키값이 할당됩니다. 최대 길이는 64자입니다.
      */
-    val lastTransactionKey: String,
+    val lastTransactionKey: String?,
 
     /**
      * 공급가액
      */
-    val suppliedAmount: Number,
+    val suppliedAmount: Long?,
 
     /**
      * 부가세
      * 결제 금액이 10,000원이고, 면세 금액이 3,000원 -> vat = (10000-3000)/11
      */
-    val vat: Number,
+    val vat: Long?,
 
     /**
      * 문화비 지출여부 ( 계좌이체, 가상계좌 결제에만 적용 )
      */
-    val cultureExpense: Boolean,
+    val cultureExpense: Boolean?,
 
     /**
      * 결제 금액 중 면세 금액
      */
-    val taxFreeAmount: Number,
+    val taxFreeAmount: Long?,
 
     /**
      * 과세를 제외한 결제 금액(컵 보증금 등)입니다.
      * 과세 제외 금액이 있는 카드 결제는 부분 취소가 안 됩니다.
      */
-    val taxExemptionAmount: Int,
+    val taxExemptionAmount: Int?,
 
     /**
      * 결제 취소 이력
@@ -145,7 +145,7 @@ class TossResponse(
      * 부분취소 가능 여부
      * t: 가능, f: 불가
      */
-    val isPartialCancelable: Boolean,
+    val isPartialCancelable: Boolean?,
 
     /**
      * 카드 결제 정보
@@ -160,7 +160,7 @@ class TossResponse(
     /**
      * 가상계좌 웹 훅
      */
-    val secret: String,
+    val secret: String?,
 
     /**
      * 휴대전화 결제
@@ -181,7 +181,7 @@ class TossResponse(
      * 결제 요청 시 SDK에서 직접 추가할 수 있는 결제 관련 정보입니다.
      * 최대 5개의 키 값
      */
-    val metadata: Map<String,Any>,
+    val metadata: Map<String,Any>?,
 
     /**
      * 영수증
@@ -201,7 +201,7 @@ class TossResponse(
     /**
      * 결제한 국가 코드
      */
-    val country: String,
+    val country: String?,
 
     /**
      * 결제 실패 정보

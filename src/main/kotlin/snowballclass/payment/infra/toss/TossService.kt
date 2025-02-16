@@ -12,7 +12,7 @@ import java.util.Base64
 
 @HttpExchange
 interface TossService {
-    @PostExchange("/payment/confirm")
+    @PostExchange("/payments/confirm")
     fun confirm(
         @RequestHeader(HttpHeaders.AUTHORIZATION) secretKey: String,
         @RequestHeader(HttpHeaders.CONTENT_TYPE) contentType: String,

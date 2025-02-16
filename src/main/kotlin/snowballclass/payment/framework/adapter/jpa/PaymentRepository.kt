@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository
 import snowballclass.payment.domain.Payment
 
 @Repository
-interface PayRepository: JpaRepository<Payment,Long> {
+interface PaymentRepository: JpaRepository<Payment,Long> {
 }
