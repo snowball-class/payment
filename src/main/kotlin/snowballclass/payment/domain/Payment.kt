@@ -7,7 +7,6 @@ import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.CashReceipt
 import snowballclass.payment.domain.model.vo.Easypay
 import snowballclass.payment.domain.model.vo.Failure
-import snowballclass.payment.domain.model.vo.PaymentInfo
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
