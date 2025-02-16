@@ -1,3 +1,6 @@
+server:
+  port: 8083
+
 spring:
   application:
     name: payment
@@ -17,4 +20,22 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 toss:
-  client-key: "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6"
+  client-key: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"
+
+# swagger 관련 설정
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  paths-to-match: /**
+  swagger-ui:
+    path: /
+    display-request-duration: true
+    groups-order: desc
+    operations-sorter: alpha
+    disable-swagger-default-url: true
+  api-docs:
+    groups:
+      enabled: true
+
+tag:
+  version: 1.0.0
