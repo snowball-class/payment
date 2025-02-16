@@ -8,7 +8,8 @@ import snowballclass.payment.domain.PaymentDetail
 
 @Repository
 class PaymentConfirmAdapter(
-    private val paymentRepository: PaymentRepository, private val paymentDetailRepository: PaymentDetailRepository
+    private val paymentRepository: PaymentRepository,
+    private val paymentDetailRepository: PaymentDetailRepository
 ):PaymentConfirmOutputPort {
     @Transactional
     override fun save(payment:Payment):Payment {

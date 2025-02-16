@@ -1,8 +1,10 @@
 package snowballclass.payment.framework.web.dto
 
 import snowballclass.payment.domain.Lesson
+import java.util.UUID
 
 class PaymentConfirmInputDto(
+	val memberUUID: UUID,
 	val orderId: String,
 	val orderName: String,
 	val paymentKey: String,
