@@ -12,6 +12,7 @@ import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
 import snowballclass.payment.domain.model.vo.Transfer
 import snowballclass.payment.domain.model.vo.VirtualAccount
+import snowballclass.payment.framework.web.dto.PaymentConfirmInputDto
 import snowballclass.payment.framework.web.dto.TossResponse
 import java.time.LocalDate
 import java.util.UUID
@@ -34,10 +35,6 @@ class Payment(
     var status: PaymentStatus,
     // 마지막 결제 키
     val lastTransactionKey: String? = null,
-    // todo
-    @OneToMany(mappedBy = "payment")
-    @JsonManagedReference
-    val cancelHistory: MutableList<PaymentCancel> = mutableListOf(),
     val isPartialCancelable: Boolean,
     @Embedded
     val card: Card? = null,
@@ -63,7 +60,7 @@ class Payment(
     val paidAt: LocalDate,
 ) {
     companion object {
-        fun confirm(response:TossResponse): Payment {
+        fun confirm(payDto:PaymentConfirmInputDto, response:TossResponse): Payment {
             return Payment(
                 orderId = UUID.fromString(response.orderId),
                 paymentKey = response.paymentKey,
@@ -76,7 +73,6 @@ class Payment(
                 paymentMethod = PaymentMethod.fromLabel(response.method ?: "카드"),
                 status = PaymentStatus.AWAIT,
                 lastTransactionKey = response.lastTransactionKey,
-                cancelHistory = mutableListOf(),
                 isPartialCancelable = response.isPartialCancelable ?: true,
                 card = response.card,
                 virtualAccount = response.virtualAccount,

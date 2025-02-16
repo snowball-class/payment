@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional
 import snowballclass.payment.application.output.PaymentConfirmOutputPort
 import snowballclass.payment.application.usecase.PaymentConfirmUsecase
 import snowballclass.payment.domain.Payment
+import snowballclass.payment.domain.PaymentDetail
+import snowballclass.payment.framework.web.dto.CreatePaymentDetailDto
 import snowballclass.payment.framework.web.dto.PaymentConfirmInputDto
 import snowballclass.payment.framework.web.dto.PaymentConfirmOutputDto
 import snowballclass.payment.framework.web.dto.TossPayRequest
@@ -44,8 +46,14 @@ class PaymentConfirmInputPort(
                 secretKey = secretKey, contentType = "application/json", body = data
             )
             val responseBody: TossResponse = response.body ?: throw RuntimeException("토스 응답 에러")
-            val payment:Payment = Payment.confirm(responseBody)
+            val payment:Payment = Payment.confirm(payDto, responseBody)
             paymentConfirmOutputPort.save(payment)
+            val paymentDetailList = payDto.lessonList.map {
+                PaymentDetail.create(payment, CreatePaymentDetailDto(
+                    lesson = it
+                ))
+            }
+            paymentConfirmOutputPort.saveAll(paymentDetailList)
             return PaymentConfirmOutputDto(
                 paymentId = payment.id,
                 orderId = payment.orderId,

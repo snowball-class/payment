@@ -1,5 +1,7 @@
 package snowballclass.payment.framework.web.dto
 
+import snowballclass.payment.domain.Lesson
+
 class PaymentConfirmInputDto(
 	val orderId: String,
 	val orderName: String,
@@ -9,5 +11,5 @@ class PaymentConfirmInputDto(
 	val customerName: String,
 	val customerPhone: String,
 	val customerMobilePhone: String,
-	val lessonIdList: ArrayList<Long>
+	val lessonList: List<Lesson>
 )
