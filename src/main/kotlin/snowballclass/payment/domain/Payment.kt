@@ -7,6 +7,7 @@ import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.CashReceipt
 import snowballclass.payment.domain.model.vo.Easypay
 import snowballclass.payment.domain.model.vo.Failure
+import snowballclass.payment.domain.model.vo.PaymentInfo
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
@@ -34,6 +35,7 @@ class Payment(
     var status: PaymentStatus,
     // 마지막 결제 키
     val lastTransactionKey: String? = null,
+    // todo
     @OneToMany(mappedBy = "payment")
     @JsonManagedReference
     val cancelHistory: MutableList<PaymentCancel> = mutableListOf(),
@@ -55,6 +57,7 @@ class Payment(
     @Embedded
     val easypay: Easypay? = null,
     var deleted: Boolean = false,
+    // todo : LocalDate -> ZonedDateTime, OffsetDateTime 고민 필요
     var deletedAt: LocalDate? = null,
     val updatedAt: LocalDate = LocalDate.now(),
     val createdAt: LocalDate = LocalDate.now(),
