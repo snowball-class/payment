@@ -7,7 +7,6 @@ import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.CashReceipt
 import snowballclass.payment.domain.model.vo.Easypay
 import snowballclass.payment.domain.model.vo.Failure
-import snowballclass.payment.domain.model.vo.PaymentInfo
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
@@ -21,14 +20,12 @@ import java.util.UUID
 class Payment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val paymentId: Long = 0,
-    // paymentKey 와 동일
-    val paymentUUID: UUID,
+    val id: Long = 0,
+    val orderId: UUID,
+    val paymentKey: String,
     @Enumerated(EnumType.STRING)
     val paymentType: PaymentType = PaymentType.NORMAL,
-    val paymentName: String,
-    @Embedded
-    val paymentInfo: PaymentInfo = PaymentInfo(),
+    val orderName: String,
     @Embedded
     val amount: Amount,
     @Enumerated(EnumType.STRING)
@@ -37,11 +34,10 @@ class Payment(
     var status: PaymentStatus,
     // 마지막 결제 키
     val lastTransactionKey: String? = null,
-    // todo
     @OneToMany(mappedBy = "payment")
     @JsonManagedReference
-    val cancelHistory: ArrayList<PaymentCancel> = arrayListOf(),
-    val isPartialCancelable: Boolean = false,
+    val cancelHistory: MutableList<PaymentCancel> = mutableListOf(),
+    val isPartialCancelable: Boolean,
     @Embedded
     val card: Card? = null,
     @Embedded
@@ -55,68 +51,34 @@ class Payment(
     val failure: Failure? = null,
     @Embedded
     val cashReceipt: CashReceipt? = null,
-    val discount: Number = 0,
+    val discount: Long = 0,
     @Embedded
     val easypay: Easypay? = null,
     var deleted: Boolean = false,
-    // todo : LocalDate -> ZonedDateTime, OffsetDateTime 고민 필요
     var deletedAt: LocalDate? = null,
     val updatedAt: LocalDate = LocalDate.now(),
     val createdAt: LocalDate = LocalDate.now(),
-    val paidAt: LocalDate? = null,
-    val approvedAt: LocalDate? = null,
-    // todo : 결제 수단은 어떤 것들을 사용할 것인가
+    val paidAt: LocalDate,
 ) {
     companion object {
-        // todo : 모든 결제수단 엔티티 속성 추가 필요
-        fun create():Payment {
+        fun confirm(response:TossResponse): Payment {
             return Payment(
-                paymentUUID = UUID.randomUUID(),
-                status = PaymentStatus.AWAIT,
+                orderId = UUID.fromString(response.orderId),
+                paymentKey = response.paymentKey,
+                paymentType =  PaymentType.fromString(response.type ?: "NORMAL"),
+                orderName = response.orderName ?: "",
                 amount = Amount(
-                    totalAmount = 0,
-                    balanceAmount = 0,
+                    totalAmount = response.totalAmount ?: 0,
+                    balanceAmount = response.balanceAmount ?: 0,
                 ),
-                paymentMethod = PaymentMethod.CARD,
-                paymentName = "",
-                paymentType = PaymentType.NORMAL
-            )
-        }
-
-        fun fromToss(response:TossResponse): Payment {
-            return Payment(
-                paymentUUID = UUID.fromString(response.paymentKey),
-                paymentType =  PaymentType.fromString(response.type),
-                paymentName = response.orderName,
-                paymentInfo = PaymentInfo(
-                    version = response.version,
-                    mId = response.mId
-                ),
-                amount = Amount(
-                    totalAmount = 0,
-                    balanceAmount = 0,
-                ),
-                paymentMethod = PaymentMethod.fromLabel(response.method),
+                paymentMethod = PaymentMethod.fromLabel(response.method ?: "카드"),
                 status = PaymentStatus.AWAIT,
                 lastTransactionKey = response.lastTransactionKey,
-                cancelHistory = ArrayList(response.cancels?.map {
-                    PaymentCancel(
-                        cancelAmount = it.cancelAmount,
-                        cancelReason = it.cancelReason,
-                        refundableAmount = it.refundableAmount,
-                        transferDiscountAmount = it.transferDiscountAmount,
-                        easyPayDiscountAmount = it.easyPayDiscountAmount,
-                        canceledAt = it.canceledAt,
-                        transactionKey = it.transactionKey,
-                        receiptKey = it.receiptKey,
-                        cancelStatus = it.cancelStatus,
-                        cancelRequestId = it.cancelRequestId
-                    )
-                } ?: listOf()),
-                isPartialCancelable = response.isPartialCancelable,
+                cancelHistory = mutableListOf(),
+                isPartialCancelable = response.isPartialCancelable ?: true,
                 card = response.card,
                 virtualAccount = response.virtualAccount,
-                hookSecret = response.secret,
+                hookSecret = response.secret ?: "",
                 transfer = response.transfer,
                 metadata = response.metadata.toString(),
                 checkoutUrl = response.checkout?.url ?: "",
@@ -125,7 +87,6 @@ class Payment(
                 discount = response.discount?.amount ?: 0,
                 easypay = response.easypay,
                 paidAt = LocalDate.now(),
-                approvedAt = LocalDate.now(),
             )
         }
     }

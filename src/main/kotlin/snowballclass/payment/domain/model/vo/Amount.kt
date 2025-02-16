@@ -11,9 +11,9 @@ class Amount(
 	@Enumerated(EnumType.STRING)
 	val currency: Currency = Currency.KRW,
 	// 총 결제금액
-	val totalAmount: Number = 0,
+	val totalAmount: Long = 0,
 	// 취소할 수 있는 금액
-	val balanceAmount: Number = 0,
+	val balanceAmount: Long = 0,
 ):Serializable {
 
 }

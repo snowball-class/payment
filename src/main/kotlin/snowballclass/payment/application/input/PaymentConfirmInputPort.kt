@@ -1,9 +1,9 @@
 package snowballclass.payment.application.input
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import snowballclass.payment.application.output.PaymentConfirmOutputPort
 import snowballclass.payment.application.usecase.PaymentConfirmUsecase
 import snowballclass.payment.domain.Payment
@@ -29,40 +29,35 @@ class PaymentConfirmInputPort(
      * c: client, p: pg사, s: server
      * c(결제요청) -> t(결제수단, 결제가능여부확인) -> c(검증응답확인,실결제요청) -> s(실제결제요청) -> t(실제결제, 응답) -> c
      */
+    @Transactional
     override fun confirm(payDto: PaymentConfirmInputDto): PaymentConfirmOutputDto  {
         val client:TossService = tossClient.create()
         val encoder: Base64.Encoder = Base64.getEncoder()
         val secretKey:String = "Basic " + String(encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)))
-        // todo : 데이터 추가
         val data = TossPayRequest(
-            orderId = payDto.orderId
+            orderId = payDto.orderId,
+            paymentKey = payDto.paymentKey,
+            amount = payDto.amount
         )
-        val response:ResponseEntity<TossResponse> = client.confirm(
-            secretKey = secretKey,
-            contentType = "application/json",
-            body = data
-        )
-
-        val responseBody:TossResponse? = response.body
-
-        if (response.statusCode.is4xxClientError) {
-            throw RuntimeException(response.body?.failure?.message ?: "결제 시도 중 에러가 발생했습니다")
+        try {
+             val response: ResponseEntity<TossResponse> = client.confirm(
+                secretKey = secretKey, contentType = "application/json", body = data
+            )
+            val responseBody: TossResponse = response.body ?: throw RuntimeException("토스 응답 에러")
+            val payment:Payment = Payment.confirm(responseBody)
+            paymentConfirmOutputPort.save(payment)
+            return PaymentConfirmOutputDto(
+                paymentId = payment.id,
+                orderId = payment.orderId,
+                orderName = payment.orderName,
+                paymentType = payment.paymentType,
+                amount = payment.amount.totalAmount,
+                paymentMethod = payment.paymentMethod,
+                status = payment.status,
+                paidAt = payment.paidAt
+            )
+        } catch (e:Exception) {
+            throw RuntimeException(e.message)
         }
-
-        if (response.statusCode.is5xxServerError) {
-            throw RuntimeException(response.body?.failure?.message ?: "결제 서버 에서 에러가 발생했습니다")
-        }
-        
-        if (responseBody == null) {
-            throw RuntimeException("결제 서버로부터 잘못된 응답이 도달했습니다")
-        }
-
-        // 확인이 완료되면 저장
-        // 저장 정책에 대한 정의 필요
-        val payment:Payment = Payment.fromToss(responseBody)
-        paymentConfirmOutputPort.save(payment)
-        return PaymentConfirmOutputDto(
-
-        )
     }
 }
