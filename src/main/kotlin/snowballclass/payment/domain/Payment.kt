@@ -11,7 +11,7 @@ import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
 import snowballclass.payment.domain.model.vo.Transfer
 import snowballclass.payment.domain.model.vo.VirtualAccount
-import snowballclass.payment.framework.web.dto.input.PaymentConfirmInputDto
+import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
 import java.time.LocalDate
 import java.util.UUID
@@ -58,7 +58,7 @@ class Payment(
     val paidAt: LocalDate,
 ) {
     companion object {
-        fun confirm(payDto: PaymentConfirmInputDto, response: TossResponse): Payment {
+        fun confirm(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
             return Payment(
                 memberUUID = payDto.memberUUID,
                 orderId = UUID.fromString(response.orderId),

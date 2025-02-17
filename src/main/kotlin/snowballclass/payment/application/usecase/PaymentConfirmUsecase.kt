@@ -1,8 +1,8 @@
 package snowballclass.payment.application.usecase
 
-import snowballclass.payment.framework.web.dto.input.PaymentConfirmInputDto
-import snowballclass.payment.framework.web.dto.output.PaymentConfirmOutputDto
+import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
+import snowballclass.payment.framework.web.dto.output.ConfirmPaymentOutputDto
 
 interface PaymentConfirmUsecase {
-    fun confirm(payDto: PaymentConfirmInputDto): PaymentConfirmOutputDto
+    fun confirm(payDto: ConfirmPaymentInputDto): ConfirmPaymentOutputDto
 }

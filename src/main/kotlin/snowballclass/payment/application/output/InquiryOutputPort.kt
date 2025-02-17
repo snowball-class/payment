@@ -9,5 +9,7 @@ import java.util.UUID
 interface InquiryOutputPort {
     fun getPayment(orderId:UUID): Payment
     fun getPaymentList(memberUUID:UUID): List<Payment>
-    fun getPaymentDetailList(paymentId: Long): List<PaymentDetail>
+    fun getPaymentDetailListByPayment(payment: Payment): List<PaymentDetail>
+    fun getPaymentDetailListByIdIn(paymentDetailIdList: List<Long>): List<PaymentDetail>
+    fun getPaymentDetailCount(payment: Payment): Int
 }

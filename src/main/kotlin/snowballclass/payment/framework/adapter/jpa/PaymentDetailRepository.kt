@@ -7,4 +7,6 @@ import snowballclass.payment.domain.PaymentDetail
 @Repository
 interface PaymentDetailRepository: JpaRepository<PaymentDetail, Long> {
 	fun findByPaymentId(paymentId: Long): List<PaymentDetail>
+	fun findByIdIn(paymentDetailIdList: List<Long>): List<PaymentDetail>
+	fun countByPaymentId(paymentId: Long): Int
 }

@@ -7,7 +7,7 @@ import snowballclass.payment.domain.model.vo.Lesson
 import java.util.UUID
 
 @Schema(description = "결제 요청 DTO")
-class PaymentConfirmInputDto(
+class ConfirmPaymentInputDto(
 	@Schema(description = "유저 식별자", defaultValue = "UUID")
 	val memberUUID: UUID,
 	@Schema(description = "주문 식별자", defaultValue = "UUID")

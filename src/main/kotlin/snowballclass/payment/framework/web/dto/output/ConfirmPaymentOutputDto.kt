@@ -6,7 +6,7 @@ import snowballclass.payment.domain.model.vo.PaymentType
 import java.time.LocalDate
 import java.util.UUID
 
-class PaymentConfirmOutputDto(
+class ConfirmPaymentOutputDto(
 	val paymentId: Long,
 	val orderId: UUID,
 	val orderName: String,
