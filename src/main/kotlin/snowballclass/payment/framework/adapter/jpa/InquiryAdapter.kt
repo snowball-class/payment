@@ -22,7 +22,15 @@ class InquiryAdapter(
         return paymentRepository.findByMemberUUID(memberUUID)
     }
 
-    override fun getPaymentDetailList(paymentId: Long): List<PaymentDetail> {
-        return paymentDetailRepository.findByPaymentId(paymentId)
+    override fun getPaymentDetailListByPayment(payment:Payment): List<PaymentDetail> {
+        return paymentDetailRepository.findByPaymentId(payment.id)
+    }
+
+    override fun getPaymentDetailListByIdIn(paymentDetailIdList: List<Long>): List<PaymentDetail> {
+        return paymentDetailRepository.findByIdIn(paymentDetailIdList)
+    }
+
+    override fun getPaymentDetailCount(payment: Payment): Int {
+        return paymentDetailRepository.countByPaymentId(payment.id)
     }
 }

@@ -5,7 +5,7 @@ import snowballclass.payment.application.output.InquiryOutputPort
 import snowballclass.payment.application.usecase.InquiryUsecase
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
-import snowballclass.payment.framework.web.dto.GetPaymentOutputDto
+import snowballclass.payment.framework.web.dto.output.GetPaymentOutputDto
 import java.util.UUID
 
 @Service
@@ -15,14 +15,14 @@ class InquiryInputPort(
     override fun getPaymentList(memberUUID:UUID): List<GetPaymentOutputDto> {
         val paymentList:List<Payment> = inquiryOutputPort.getPaymentList(memberUUID)
         return paymentList.map{
-            val paymentDetailList:List<PaymentDetail> = inquiryOutputPort.getPaymentDetailList(it.id)
+            val paymentDetailList:List<PaymentDetail> = inquiryOutputPort.getPaymentDetailListByPayment(it)
             GetPaymentOutputDto.fromPayment(it, paymentDetailList)
         }
     }
 
     override fun getPayment(orderId:UUID): GetPaymentOutputDto {
         val payment:Payment = inquiryOutputPort.getPayment(orderId)
-        val paymentDetailList:List<PaymentDetail> = inquiryOutputPort.getPaymentDetailList(payment.id)
+        val paymentDetailList:List<PaymentDetail> = inquiryOutputPort.getPaymentDetailListByPayment(payment)
         return GetPaymentOutputDto.fromPayment(payment, paymentDetailList)
     }
 }
