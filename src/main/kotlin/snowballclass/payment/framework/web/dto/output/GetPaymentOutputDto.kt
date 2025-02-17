@@ -22,7 +22,7 @@ class GetPaymentOutputDto(
 	val updatedAt: LocalDate,
 	val createdAt: LocalDate,
 	val paidAt: LocalDate,
-	val lessons: List<Lesson>,
+	val paymentDetailList: List<PaymentDetail>,
 ) {
 	companion object {
 		fun fromPayment(payment:Payment, paymentDetailList:List<PaymentDetail>): GetPaymentOutputDto {
@@ -38,9 +38,7 @@ class GetPaymentOutputDto(
 				deletedAt = payment.deletedAt,
 				updatedAt = payment.updatedAt,
 				paidAt = payment.paidAt,
-				lessons = paymentDetailList.map{
-					it.lesson
-				}
+				paymentDetailList = paymentDetailList
 			)
 		}
 	}
