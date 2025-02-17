@@ -1,6 +1,5 @@
-package snowballclass.payment.framework.web.dto
+package snowballclass.payment.framework.web.dto.output
 
-import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.model.vo.CancelInfo
 import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.CashReceipt
@@ -14,7 +13,6 @@ import snowballclass.payment.domain.model.vo.MobilePhone
 import snowballclass.payment.domain.model.vo.Receipt
 import snowballclass.payment.domain.model.vo.Transfer
 import snowballclass.payment.domain.model.vo.VirtualAccount
-import java.util.Objects
 
 /**
  * 사용하는 속성값만 정의하였습니다.

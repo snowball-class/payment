@@ -20,7 +20,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 toss:
-  client-key: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"
+  client-key: "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6"
 
 # swagger 관련 설정
 springdoc:

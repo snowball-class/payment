@@ -1,4 +1,4 @@
-package snowballclass.payment.framework.web.dto
+package snowballclass.payment.framework.web.dto.input
 
 class TossPayRequest(
 	val orderId: String,

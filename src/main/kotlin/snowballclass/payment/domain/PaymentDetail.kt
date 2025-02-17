@@ -8,8 +8,9 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import snowballclass.payment.domain.model.vo.Lesson
 import snowballclass.payment.domain.model.vo.PaymentStatus
-import snowballclass.payment.framework.web.dto.CreatePaymentDetailDto
+import snowballclass.payment.framework.web.dto.domain.CreatePaymentDetailDto
 
 @Entity
 class PaymentDetail(

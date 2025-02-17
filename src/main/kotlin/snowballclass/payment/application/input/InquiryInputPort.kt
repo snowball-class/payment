@@ -5,7 +5,7 @@ import snowballclass.payment.application.output.InquiryOutputPort
 import snowballclass.payment.application.usecase.InquiryUsecase
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
-import snowballclass.payment.framework.web.dto.GetPaymentOutputDto
+import snowballclass.payment.framework.web.dto.output.GetPaymentOutputDto
 import java.util.UUID
 
 @Service

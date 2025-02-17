@@ -1,6 +1,6 @@
-package snowballclass.payment.framework.web.dto
+package snowballclass.payment.framework.web.dto.output
 
-import snowballclass.payment.domain.Lesson
+import snowballclass.payment.domain.model.vo.Lesson
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.domain.model.vo.Amount
@@ -25,7 +25,7 @@ class GetPaymentOutputDto(
 	val lessons: List<Lesson>,
 ) {
 	companion object {
-		fun fromPayment(payment:Payment, paymentDetailList:List<PaymentDetail>):GetPaymentOutputDto {
+		fun fromPayment(payment:Payment, paymentDetailList:List<PaymentDetail>): GetPaymentOutputDto {
 			return GetPaymentOutputDto(
 				orderId = payment.orderId,
 				orderName = payment.orderName,

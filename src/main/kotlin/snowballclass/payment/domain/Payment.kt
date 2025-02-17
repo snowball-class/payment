@@ -1,6 +1,5 @@
 package snowballclass.payment.domain
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import snowballclass.payment.domain.model.vo.Amount
 import snowballclass.payment.domain.model.vo.Card
@@ -12,8 +11,8 @@ import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
 import snowballclass.payment.domain.model.vo.Transfer
 import snowballclass.payment.domain.model.vo.VirtualAccount
-import snowballclass.payment.framework.web.dto.PaymentConfirmInputDto
-import snowballclass.payment.framework.web.dto.TossResponse
+import snowballclass.payment.framework.web.dto.input.PaymentConfirmInputDto
+import snowballclass.payment.framework.web.dto.output.TossResponse
 import java.time.LocalDate
 import java.util.UUID
 
@@ -59,7 +58,7 @@ class Payment(
     val paidAt: LocalDate,
 ) {
     companion object {
-        fun confirm(payDto:PaymentConfirmInputDto, response:TossResponse): Payment {
+        fun confirm(payDto: PaymentConfirmInputDto, response: TossResponse): Payment {
             return Payment(
                 memberUUID = payDto.memberUUID,
                 orderId = UUID.fromString(response.orderId),

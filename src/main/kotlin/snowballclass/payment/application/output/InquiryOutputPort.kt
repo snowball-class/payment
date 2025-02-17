@@ -1,7 +1,6 @@
 package snowballclass.payment.application.output
 
 import org.springframework.stereotype.Repository
-import snowballclass.payment.domain.Lesson
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import java.util.UUID

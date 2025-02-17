@@ -3,12 +3,11 @@ package snowballclass.payment.infra.toss
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
-import snowballclass.payment.framework.web.dto.TossResponse
+import snowballclass.payment.framework.web.dto.output.TossResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
-import snowballclass.payment.framework.web.dto.TossPayRequest
-import java.util.Base64
+import snowballclass.payment.framework.web.dto.input.TossPayRequest
 
 @HttpExchange
 interface TossService {
