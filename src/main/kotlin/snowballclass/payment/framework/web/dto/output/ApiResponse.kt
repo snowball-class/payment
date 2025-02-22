@@ -13,7 +13,6 @@ class ApiResponse<T>(
 		fun <T> success(data: T, message:String): ResponseEntity<ApiResponse<T>> {
 			return ResponseEntity.ok(
 				ApiResponse(
-				success = true,
 				status = HttpStatus.OK,
 				data = data,
 				message = message
