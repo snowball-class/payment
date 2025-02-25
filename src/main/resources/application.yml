@@ -1,24 +1,29 @@
+# 서버 포트
 server:
   port: 8083
 
+# 스프링 설정
 spring:
+  # 서버명
   application:
     name: payment
-
+  # jpa 설정
   jpa:
     hibernate:
+      # db 핸들링 by jpa
       ddl-auto: update
     properties:
       hibernate:
         format_sql: true
     show-sql: true
-
+  # db 정보
   datasource:
     url: "jdbc:mysql://3.34.177.168/payment"
     username: test
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+# toss 설정
 toss:
   client-key: "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6"
 
@@ -36,6 +41,5 @@ springdoc:
   api-docs:
     groups:
       enabled: true
-
 tag:
   version: 1.0.0
