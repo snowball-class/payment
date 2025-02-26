@@ -12,7 +12,7 @@ class LessonClient {
 	@Value("\${service.lesson.url}")
 	private val lessonServiceUrl: String = ""
 
-	@Bean
+	@Bean("createLessonClient")
 	fun lessonClient(): LessonService {
 		val restClient: RestClient = RestClient.builder().baseUrl(lessonServiceUrl).build()
 		val adapter: RestClientAdapter = RestClientAdapter.create(restClient)
