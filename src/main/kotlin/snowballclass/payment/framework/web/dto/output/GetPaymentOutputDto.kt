@@ -1,6 +1,5 @@
 package snowballclass.payment.framework.web.dto.output
 
-import snowballclass.payment.domain.model.vo.Lesson
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.domain.model.vo.Amount

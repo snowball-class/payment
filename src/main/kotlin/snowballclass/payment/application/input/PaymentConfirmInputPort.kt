@@ -49,10 +49,11 @@ class PaymentConfirmInputPort(
             val payment:Payment = Payment.confirm(payDto, responseBody)
             // 주문 저장
             paymentConfirmOutputPort.save(payment)
-            val paymentDetailList = payDto.lessonList.map {
+            // todo : id 를 list로 받는 api 요청 필요
+            val paymentDetailList = payDto.lessonIdList.map {
                 PaymentDetail.create(payment, CreatePaymentDetailDto(
-                    lesson = it
-                )
+                        lesson = paymentConfirmOutputPort.getLessonDetail(it)
+                    )
                 )
             }
             // 주문 상세 저장

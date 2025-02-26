@@ -43,3 +43,12 @@ springdoc:
       enabled: true
 tag:
   version: 1.0.0
+
+# MSA 서버 설정
+service:
+  member:
+    url: "http://snowball-class.shop:30001"
+  lesson:
+    url: "http://snowball-class.shop:30002"
+  cart:
+    url: "http://snowball-class.shop:30004"

@@ -26,6 +26,6 @@ class ConfirmPaymentInputDto(
 	@Schema(description = "유저 휴대폰 번호", defaultValue = "010-1234-5678")
 	val memberPhone: String,
 	@field:Size(min=1)
-	@Schema(description = "강의 리스트")
-	val lessonList: List<Lesson>
+	@Schema(description = "강의 ID 리스트")
+	val lessonIdList: List<Long>
 )
