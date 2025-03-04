@@ -16,12 +16,6 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
-  # db 정보
-  datasource:
-    url: "jdbc:mysql://43.203.119.187:3306/payment"
-    username: snowball
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
 # toss 설정
 toss:
