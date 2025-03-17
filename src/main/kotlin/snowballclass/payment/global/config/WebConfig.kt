@@ -10,8 +10,8 @@ class WebConfig(): WebMvcConfigurer {
 	override fun addCorsMappings(registry: CorsRegistry) {
 		registry
 			.addMapping("/**")
-			.allowedOrigins("http://localhost:3000")
-			.allowedMethods("GET","POST","PUT","DELETE")
+			.allowedOrigins("http://localhost:3000", "http://snowball-class.shop", "https://snowball-class.shop", "http://snowball-class.shop:30007")
+			.allowedMethods("GET","POST","PUT","DELETE", "OPTIONS")
 			// .allowedHeaders("Authorization", "Content-Type").allowCredentials(true).maxAge(3600)
 	}
 }
