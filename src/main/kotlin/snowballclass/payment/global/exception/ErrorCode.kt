@@ -14,5 +14,6 @@ enum class ErrorCode(val status: HttpStatus, val message:String) {
 	CANNOT_PARTIAL_CANCEL_ERROR(HttpStatus.BAD_REQUEST, "부분 취소가 불가능한 거래입니다"),
 
 	// 결제
-	ALREADY_CANCEL_PAYMENT(HttpStatus.BAD_REQUEST, "이미 취소된 거래입니다")
+	ALREADY_CANCELED_PAYMENT_EXIST(HttpStatus.BAD_REQUEST, "이미 취소된 거래가 존재합니다"),
+	FAILED_CANCEL_PAYMENT(HttpStatus.INTERNAL_SERVER_ERROR, "거래 취소에 실패했습니다")
 }
