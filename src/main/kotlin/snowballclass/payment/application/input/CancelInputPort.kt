@@ -31,7 +31,9 @@ class CancelInputPort(
     override fun cancel(orderId: UUID, cancelPaymentInputDto:CancelPaymentInputDto):Boolean {
         // TODO , important : 토스로부터 데이터를 가져오는 부분을 outputPort 로 변경 필요
         val payment:Payment = inquiryOutputPort.getPayment(orderId = orderId)
-        if (!payment.isPartialCancelable) throw RuntimeException("부분 취소가 불가능한 거래입니다")
+        if (!payment.isPartialCancelable) {
+            throw RuntimeException("부분 취소가 불가능한 거래입니다")
+        }
         val client = tossClient.create()
         val encoder: Base64.Encoder = Base64.getEncoder()
         val secretKey:String = "Basic " + String(encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)))
