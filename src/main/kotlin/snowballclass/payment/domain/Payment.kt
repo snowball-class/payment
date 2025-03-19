@@ -58,7 +58,7 @@ class Payment(
     val paidAt: LocalDate,
 ) {
     companion object {
-        fun confirm(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
+        fun create(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
             return Payment(
                 memberUUID = payDto.memberUUID,
                 orderId = UUID.fromString(response.orderId),

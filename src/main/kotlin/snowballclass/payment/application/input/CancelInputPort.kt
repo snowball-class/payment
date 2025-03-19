@@ -57,7 +57,7 @@ class CancelInputPort(
 
     // 취소 총액 계산
     private fun calculateTotalAmount(paymentDetailList:List<PaymentDetail>):Long {
-        return paymentDetailList.sumOf {(it.lesson.amount - it.lesson.discountAmount)}
+        return paymentDetailList.sumOf {(it.lesson.amount)}
     }
 
     // paymentDetail 취소 가능 검사

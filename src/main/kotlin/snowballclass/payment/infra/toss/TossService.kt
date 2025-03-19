@@ -18,7 +18,7 @@ interface TossService {
         @RequestHeader(HttpHeaders.AUTHORIZATION) secretKey: String,
         @RequestHeader(HttpHeaders.CONTENT_TYPE) contentType: String,
         @RequestBody body: TossPayRequestDto
-    ): ResponseEntity<TossResponse>
+    ): TossResponse
 
     @PostExchange("/payments/{paymentKey}/cancel")
     fun cancel(
