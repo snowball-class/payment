@@ -30,7 +30,7 @@ class PaymentController(
     @PostMapping("/payment/confirm")
     fun pay(
         @RequestBody @Valid body: ConfirmPaymentInputDto,
-    ):ResponseEntity<ApiResponse<ConfirmPaymentOutputDto>> {
+    ):ApiResponse<ConfirmPaymentOutputDto> {
         return ApiResponse.success(
             message = "결제 요청 완료",
             data = paymentConfirmUsecase.confirm(body)
@@ -41,7 +41,7 @@ class PaymentController(
     @GetMapping("/{memberUUID}/payments")
     fun getPayments(
         @PathVariable memberUUID: UUID
-    ):ResponseEntity<ApiResponse<List<GetPaymentOutputDto>>> {
+    ):ApiResponse<List<GetPaymentOutputDto>> {
         return ApiResponse.success(
             message = "목록 조회 완료",
             data = inquiryUsecase.getPaymentList(memberUUID = memberUUID)
@@ -52,7 +52,7 @@ class PaymentController(
     @GetMapping("/payment/{orderId}")
     fun getPayment(
         @PathVariable orderId: UUID,
-    ): ResponseEntity<ApiResponse<GetPaymentOutputDto>> {
+    ): ApiResponse<GetPaymentOutputDto> {
         return ApiResponse.success(
             message = "상세 조회 완료",
             data = inquiryUsecase.getPayment(orderId = orderId)
@@ -64,7 +64,7 @@ class PaymentController(
     fun cancel(
         @PathVariable orderId: UUID,
         @RequestBody cancelPaymentInputDto: CancelPaymentInputDto
-    ):ResponseEntity<ApiResponse<Boolean>> {
+    ):ApiResponse<Boolean> {
         return ApiResponse.success(
             message = "결제 취소 완료",
             data = cancelUsecase.cancel(orderId = orderId, cancelPaymentInputDto = cancelPaymentInputDto)

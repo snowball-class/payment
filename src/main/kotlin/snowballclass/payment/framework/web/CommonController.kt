@@ -12,7 +12,7 @@ import snowballclass.payment.framework.web.dto.output.ApiResponse
 class CommonController() {
     @Operation(summary = "서버 체크 API")
     @GetMapping("/health-check")
-    fun healthCheck():ResponseEntity<ApiResponse<String>> {
+    fun healthCheck():ApiResponse<String> {
         return ApiResponse.success(
                 data = "Payment Server Listening",
                 message = "Payment Server Listening"
