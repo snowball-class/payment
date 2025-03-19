@@ -13,7 +13,7 @@ import snowballclass.payment.domain.model.vo.Transfer
 import snowballclass.payment.domain.model.vo.VirtualAccount
 import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -51,11 +51,10 @@ class Payment(
     @Embedded
     val easypay: Easypay? = null,
     var deleted: Boolean = false,
-    // todo : LocalDate -> ZonedDateTime, OffsetDateTime 고민 필요
-    var deletedAt: LocalDate? = null,
-    val updatedAt: LocalDate = LocalDate.now(),
-    val createdAt: LocalDate = LocalDate.now(),
-    val paidAt: LocalDate,
+    var deletedAt: LocalDateTime? = null,
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val paidAt: LocalDateTime,
 ) {
     companion object {
         fun create(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
@@ -83,7 +82,7 @@ class Payment(
                 failure = response.failure,
                 cashReceipt = response.cashReceipt,
                 easypay = response.easypay,
-                paidAt = LocalDate.now(),
+                paidAt = LocalDateTime.now(),
             )
         }
     }

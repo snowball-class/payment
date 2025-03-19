@@ -6,7 +6,7 @@ import snowballclass.payment.domain.model.vo.Amount
 import snowballclass.payment.domain.model.vo.CashReceipt
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 class GetPaymentOutputDto(
@@ -17,10 +17,10 @@ class GetPaymentOutputDto(
 	val status: PaymentStatus,
 	val cashReceipt: CashReceipt?,
 	val deleted: Boolean,
-	val deletedAt: LocalDate?,
-	val updatedAt: LocalDate,
-	val createdAt: LocalDate,
-	val paidAt: LocalDate,
+	val deletedAt: LocalDateTime?,
+	val updatedAt: LocalDateTime,
+	val createdAt: LocalDateTime,
+	val paidAt: LocalDateTime,
 	val paymentDetailList: List<PaymentDetail>,
 ) {
 	companion object {
