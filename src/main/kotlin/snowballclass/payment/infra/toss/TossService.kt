@@ -26,5 +26,5 @@ interface TossService {
         @RequestHeader(HttpHeaders.AUTHORIZATION) secretKey: String,
         @RequestHeader(HttpHeaders.CONTENT_TYPE) contentType: String,
         @RequestBody body: TossPayCancelRequestDto
-    ): ResponseEntity<TossResponse>
+    ): TossResponse
 }
