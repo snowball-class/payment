@@ -9,13 +9,11 @@ class ApiResponse<T>(
 	val data: T
 ) {
 	companion object {
-		fun <T> success(data: T, message:String): ResponseEntity<ApiResponse<T>> {
-			return ResponseEntity.ok(
-				ApiResponse(
+		fun <T> success(data: T, message:String): ApiResponse<T> {
+			return ApiResponse(
 				status = HttpStatus.OK,
 				data = data,
 				message = message
-				)
 			)
 		}
 	}

@@ -11,5 +11,8 @@ enum class ErrorCode(val status: HttpStatus, val message:String) {
 
 	// 토스
 	TOSS_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "결제 서버에 문제가 발생했습니다"),
-	CANNOT_PARTIAL_CANCEL_ERROR(HttpStatus.BAD_REQUEST, "부분 취소가 불가능한 거래입니다")
+	CANNOT_PARTIAL_CANCEL_ERROR(HttpStatus.BAD_REQUEST, "부분 취소가 불가능한 거래입니다"),
+
+	// 결제
+	ALREADY_CANCEL_PAYMENT(HttpStatus.BAD_REQUEST, "이미 취소된 거래입니다")
 }
