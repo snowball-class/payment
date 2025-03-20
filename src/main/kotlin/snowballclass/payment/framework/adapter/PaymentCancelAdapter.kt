@@ -1,4 +1,4 @@
-package snowballclass.payment.framework.adapter.jpa
+package snowballclass.payment.framework.adapter
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
@@ -7,18 +7,19 @@ import org.springframework.transaction.annotation.Transactional
 import snowballclass.payment.application.output.PaymentCancelOutputPort
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentCancel
+import snowballclass.payment.application.output.TossPaymentOutputPort
+import snowballclass.payment.framework.adapter.jpa.PaymentCancelRepository
 import snowballclass.payment.framework.web.dto.input.TossPayCancelRequestDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
 import snowballclass.payment.global.exception.ErrorCode
 import snowballclass.payment.global.exception.payment.TossPaymentInternalServerException
-import snowballclass.payment.infra.toss.TossService
 import java.nio.charset.StandardCharsets
 import java.util.*
 
 @Repository
 class PaymentCancelAdapter(
 	private val paymentCancelRepository: PaymentCancelRepository,
-	private val tossService: TossService
+	private val tossPaymentOutputPort: TossPaymentOutputPort
 ):PaymentCancelOutputPort {
 	@Value("\${toss.client-key}")
 	private val CLIENT_SECRET:String = ""
@@ -33,7 +34,7 @@ class PaymentCancelAdapter(
 		)
 
 		try {
-			val response:TossResponse = tossService.cancel(paymentKey = payment.paymentKey, secretKey = secretKey, contentType = "application/json", body = data)
+			val response:TossResponse = tossPaymentOutputPort.cancel(paymentKey = payment.paymentKey, secretKey = secretKey, contentType = "application/json", body = data)
 			val paymentCancel = PaymentCancel(
 				cancelReason = reason,
 				cancelAmount = amount,

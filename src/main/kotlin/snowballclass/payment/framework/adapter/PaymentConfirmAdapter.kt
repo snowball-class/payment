@@ -1,4 +1,4 @@
-package snowballclass.payment.framework.adapter.jpa
+package snowballclass.payment.framework.adapter
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
@@ -7,16 +7,16 @@ import org.springframework.transaction.annotation.Transactional
 import snowballclass.payment.application.output.PaymentConfirmOutputPort
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
-import snowballclass.payment.domain.model.vo.Lesson
+import snowballclass.payment.application.output.LessonOutputPort
+import snowballclass.payment.application.output.TossPaymentOutputPort
+import snowballclass.payment.framework.adapter.jpa.PaymentDetailRepository
+import snowballclass.payment.framework.adapter.jpa.PaymentRepository
 import snowballclass.payment.framework.web.dto.domain.CreatePaymentDetailDto
 import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
-import snowballclass.payment.framework.web.dto.output.GetLessonOutputDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
 import snowballclass.payment.global.exception.ErrorCode
 import snowballclass.payment.global.exception.payment.FailedConfirmPaymentException
-import snowballclass.payment.infra.lesson.LessonService
-import snowballclass.payment.infra.toss.TossService
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
@@ -24,8 +24,8 @@ import java.util.Base64
 class PaymentConfirmAdapter(
     private val paymentRepository: PaymentRepository,
     private val paymentDetailRepository: PaymentDetailRepository,
-    private val lessonService: LessonService,
-    private val tossService: TossService
+    private val lessonOutputPort: LessonOutputPort,
+    private val tossPaymentOutputPort: TossPaymentOutputPort
 ):PaymentConfirmOutputPort {
     @Value("\${toss.client-key}")
     private val CLIENT_SECRET:String = ""
@@ -54,7 +54,7 @@ class PaymentConfirmAdapter(
         // 주문 생성 및 반환
         return Payment.create(confirmPaymentInputDto, response).also { payment ->
             // 강의 벌크 조회
-            lessonService.bulkGetLessonDetail(confirmPaymentInputDto.lessonIdList.joinToString ( "," )).data.map {
+            lessonOutputPort.bulkGetLessonDetail(confirmPaymentInputDto.lessonIdList.joinToString ( "," )).data.map {
                 // 주문 상세로 변환
                 PaymentDetail.create(payment, CreatePaymentDetailDto(lesson = it.toLesson()))
             }.also (paymentDetailRepository::saveAll)
@@ -70,7 +70,7 @@ class PaymentConfirmAdapter(
                 paymentKey = paymentKey,
                 amount = amount
             )
-            return tossService.confirm(
+            return tossPaymentOutputPort.confirm(
                 secretKey = secretKey, contentType = "application/json", body = data
             )
         } catch (e: Exception) {

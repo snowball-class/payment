@@ -1,10 +1,11 @@
-package snowballclass.payment.framework.adapter.jpa
+package snowballclass.payment.framework.adapter
 
 import org.springframework.stereotype.Repository
-import org.springframework.stereotype.Service
 import snowballclass.payment.application.output.InquiryOutputPort
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
+import snowballclass.payment.framework.adapter.jpa.PaymentDetailRepository
+import snowballclass.payment.framework.adapter.jpa.PaymentRepository
 import java.util.UUID
 
 @Repository

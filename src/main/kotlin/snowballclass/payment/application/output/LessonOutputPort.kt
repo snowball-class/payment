@@ -1,4 +1,4 @@
-package snowballclass.payment.infra.lesson
+package snowballclass.payment.application.output
 
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
@@ -6,7 +6,7 @@ import org.springframework.web.service.annotation.GetExchange
 import snowballclass.payment.framework.web.dto.output.ApiResponse
 import snowballclass.payment.framework.web.dto.output.GetLessonOutputDto
 
-interface LessonService {
+interface LessonOutputPort {
 	@GetExchange("/lessons/{lessonId}")
 	fun getLessonDetail(@PathVariable lessonId : Long): ApiResponse<GetLessonOutputDto>
 
