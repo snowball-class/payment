@@ -15,8 +15,8 @@ import snowballclass.payment.framework.web.dto.domain.CreatePaymentDetailDto
 import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
-import snowballclass.payment.global.exception.ErrorCode
-import snowballclass.payment.global.exception.payment.FailedConfirmPaymentException
+import snowballclass.payment.application.exception.ErrorCode
+import snowballclass.payment.application.exception.payment.FailedConfirmPaymentException
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
@@ -24,19 +24,14 @@ import java.util.Base64
 class PaymentConfirmAdapter(
     private val paymentRepository: PaymentRepository,
     private val paymentDetailRepository: PaymentDetailRepository,
-    private val lessonOutputPort: LessonOutputPort,
-    private val tossPaymentOutputPort: TossPaymentOutputPort
 ):PaymentConfirmOutputPort {
-    @Value("\${toss.client-key}")
-    private val CLIENT_SECRET:String = ""
-
     @Transactional
-    override fun save(payment:Payment):Payment {
+    override fun saveDetail(payment:Payment):Payment {
         return paymentRepository.save(payment)
     }
 
     @Transactional
-    override fun save(paymentDetail: PaymentDetail):PaymentDetail {
+    override fun saveDetail(paymentDetail: PaymentDetail):PaymentDetail {
         return paymentDetailRepository.save(paymentDetail)
     }
 
@@ -45,36 +40,4 @@ class PaymentConfirmAdapter(
         return paymentDetailRepository.saveAll(paymentDetailList)
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    override fun confirmPayment(confirmPaymentInputDto: ConfirmPaymentInputDto): Payment {
-        val response: TossResponse = confirmPaymentInputDto.run {
-            requestTossPaymentConfirm(orderId, paymentKey, amount)
-        }
-
-        // 주문 생성 및 반환
-        return Payment.create(confirmPaymentInputDto, response).also { payment ->
-            // 강의 벌크 조회
-            lessonOutputPort.bulkGetLessonDetail(confirmPaymentInputDto.lessonIdList.joinToString ( "," )).data.map {
-                // 주문 상세로 변환
-                PaymentDetail.create(payment, CreatePaymentDetailDto(lesson = it.toLesson()))
-            }.also (paymentDetailRepository::saveAll)
-        }.let (paymentRepository::save)
-    }
-
-    fun requestTossPaymentConfirm(orderId:String, paymentKey:String, amount: Long):TossResponse {
-        try {
-            val encoder: Base64.Encoder = Base64.getEncoder()
-            val secretKey:String = "Basic " + String(encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)))
-            val data = TossPayRequestDto(
-                orderId = orderId,
-                paymentKey = paymentKey,
-                amount = amount
-            )
-            return tossPaymentOutputPort.confirm(
-                secretKey = secretKey, contentType = "application/json", body = data
-            )
-        } catch (e: Exception) {
-            throw FailedConfirmPaymentException(ErrorCode.FAILED_CONFIRM_PAYMENT)
-        }
-    }
 }

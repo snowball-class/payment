@@ -1,5 +1,6 @@
 package snowballclass.payment.framework.web.dto.output
 
+import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
@@ -15,4 +16,12 @@ class ConfirmPaymentOutputDto(
 	val paymentMethod: PaymentMethod,
 	val status: PaymentStatus,
 	val paidAt: LocalDateTime
-)
+) {
+	companion object {
+		fun from(payment: Payment): ConfirmPaymentOutputDto {
+			return with(payment) {
+				ConfirmPaymentOutputDto(id, orderId, orderName, paymentType, amount.totalAmount, paymentMethod, status, paidAt)
+			}
+		}
+	}
+}

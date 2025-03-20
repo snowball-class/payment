@@ -14,16 +14,12 @@ import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
 interface TossPaymentOutputPort {
     @PostExchange("/payments/confirm")
     fun confirm(
-        @RequestHeader(HttpHeaders.AUTHORIZATION) secretKey: String,
-        @RequestHeader(HttpHeaders.CONTENT_TYPE) contentType: String,
         @RequestBody body: TossPayRequestDto
     ): TossResponse
 
     @PostExchange("/payments/{paymentKey}/cancel")
     fun cancel(
         @PathVariable paymentKey: String,
-        @RequestHeader(HttpHeaders.AUTHORIZATION) secretKey: String,
-        @RequestHeader(HttpHeaders.CONTENT_TYPE) contentType: String,
         @RequestBody body: TossPayCancelRequestDto
     ): TossResponse
 }

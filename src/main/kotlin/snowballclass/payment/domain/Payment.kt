@@ -58,32 +58,33 @@ class Payment(
 ) {
     companion object {
         fun create(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
-            return Payment(
-                memberUUID = payDto.memberUUID,
-                orderId = UUID.fromString(response.orderId),
-                paymentKey = response.paymentKey,
-                paymentType =  PaymentType.fromString(response.type ?: "NORMAL"),
-                orderName = response.orderName ?: "",
-                amount = Amount(
-                    totalAmount = response.totalAmount ?: 0,
-                    balanceAmount = response.balanceAmount ?: 0,
-                    discount = response.discount?.amount ?: 0,
-                ),
-                paymentMethod = PaymentMethod.fromLabel(response.method ?: "카드"),
-                status = PaymentStatus.AWAIT,
-                lastTransactionKey = response.lastTransactionKey,
-                isPartialCancelable = response.isPartialCancelable ?: true,
-                card = response.card,
-                virtualAccount = response.virtualAccount,
-                hookSecret = response.secret ?: "",
-                transfer = response.transfer,
-                metadata = response.metadata.toString(),
-                checkoutUrl = response.checkout?.url ?: "",
-                failure = response.failure,
-                cashReceipt = response.cashReceipt,
-                easypay = response.easypay,
-                paidAt = LocalDateTime.now(),
-            )
+            return with(response) {
+                Payment(
+                    memberUUID = payDto.memberUUID,
+                    orderId = UUID.fromString(orderId),
+                    paymentKey = paymentKey,
+                    paymentType =  PaymentType.fromString(type ?: "NORMAL"),
+                    orderName = orderName ?: "",
+                    amount = Amount(
+                        totalAmount = totalAmount ?: 0,
+                        balanceAmount = balanceAmount ?: 0,
+                        discount = discount?.amount ?: 0,
+                    ),
+                    paymentMethod = PaymentMethod.fromLabel(method ?: "카드"),
+                    status = PaymentStatus.AWAIT,
+                    lastTransactionKey = lastTransactionKey,
+                    isPartialCancelable = isPartialCancelable ?: true,
+                    card = card,
+                    virtualAccount = virtualAccount,
+                    hookSecret = secret ?: "",
+                    transfer = transfer,
+                    metadata = metadata.toString(),
+                    checkoutUrl = checkout?.url ?: "",
+                    failure = failure,
+                    cashReceipt = cashReceipt,
+                    paidAt = LocalDateTime.now(),
+                )
+            }
         }
     }
 }

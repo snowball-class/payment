@@ -1,7 +1,5 @@
-package snowballclass.payment.global.exception
+package snowballclass.payment.global.config
 
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
