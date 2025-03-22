@@ -26,7 +26,7 @@ class PaymentConfirmAdapter(
     private val paymentDetailRepository: PaymentDetailRepository,
 ):PaymentConfirmOutputPort {
     @Transactional
-    override fun saveDetail(payment:Payment):Payment {
+    override fun savePayment(payment:Payment):Payment {
         return paymentRepository.save(payment)
     }
 

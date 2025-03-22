@@ -32,16 +32,14 @@ class PaymentConfirmInputPort(
         val tossResponse: TossResponse = with(command) {
             requestTossPaymentConfirm(orderId, paymentKey, amount)
         }
-        val payment:Payment = paymentConfirmOutputPort.saveDetail(Payment.create(command, tossResponse))
+
+        val payment = paymentConfirmOutputPort.savePayment(Payment.create(command, tossResponse))
             .also { payment ->
-                // 강의 벌크 조회
-                lessonOutputPort.bulkGetLessonDetail(command.lessonIdList.joinToString ( "," )).data.map {
-                // 주문 상세로 변환
-                PaymentDetail.create(payment, CreatePaymentDetailDto(lesson = it.toLesson()))
-                    // Detail 전부 저장
-            }.also (paymentConfirmOutputPort::saveAll)
-                //
-        }.let (paymentConfirmOutputPort::saveDetail)
+                // lesson 기반으로 주문상세 만들고 저장
+                lessonOutputPort.bulkGetLessonDetail(command.lessonIdList.joinToString { "," }).data.map {
+                    PaymentDetail.create(payment, CreatePaymentDetailDto(it.toLesson()))
+                }.also (paymentConfirmOutputPort::saveAll)
+            }
 
         return ConfirmPaymentOutputDto.from(payment)
     }
@@ -54,6 +52,7 @@ class PaymentConfirmInputPort(
                 amount = amount
             )
             return tossPaymentOutputPort.confirm(data)
+            // TODO : 에러 세분화 필요
         } catch (e: Exception) {
             throw FailedConfirmPaymentException(ErrorCode.FAILED_CONFIRM_PAYMENT)
         }
