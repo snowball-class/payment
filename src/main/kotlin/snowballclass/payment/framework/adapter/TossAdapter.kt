@@ -17,7 +17,7 @@ class TossAdapter() {
     @Value("\${toss.client-key}")
     private val CLIENT_SECRET:String = ""
 
-    @Bean("createTossClient")
+    @Bean("tossClient")
     fun create(): TossPaymentOutputPort {
         val restClient:RestClient = RestClient.builder()
             .baseUrl("https://api.tosspayments.com/v1")
