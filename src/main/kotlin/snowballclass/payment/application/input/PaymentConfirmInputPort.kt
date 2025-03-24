@@ -36,7 +36,7 @@ class PaymentConfirmInputPort(
         val payment = paymentConfirmOutputPort.savePayment(Payment.create(command, tossResponse))
             .also { payment ->
                 // lesson 기반으로 주문상세 만들고 저장
-                lessonOutputPort.bulkGetLessonDetail(command.lessonIdList.joinToString { "," }).data.map {
+                lessonOutputPort.bulkGetLessonDetail(command.lessonIdList).map {
                     PaymentDetail.create(payment, CreatePaymentDetailDto(it.toLesson()))
                 }.also (paymentConfirmOutputPort::saveAll)
             }

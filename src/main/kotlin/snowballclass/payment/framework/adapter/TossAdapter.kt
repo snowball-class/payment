@@ -1,36 +1,22 @@
 package snowballclass.payment.framework.adapter
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.web.client.RestClient
-import org.springframework.web.client.support.RestClientAdapter
-import org.springframework.web.service.invoker.HttpServiceProxyFactory
+import org.springframework.stereotype.Repository
 import snowballclass.payment.application.output.TossPaymentOutputPort
-import java.nio.charset.StandardCharsets
-import java.util.*
+import snowballclass.payment.framework.client.TossClient
+import snowballclass.payment.framework.web.dto.input.TossPayCancelRequestDto
+import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
+import snowballclass.payment.framework.web.dto.output.TossResponse
 
-@Configuration
-class TossAdapter() {
-    @Value("\${toss.client-key}")
-    private val CLIENT_SECRET:String = ""
+@Repository
+class TossAdapter(
+	private val tossClient: TossClient
+): TossPaymentOutputPort {
+	override fun confirm(body: TossPayRequestDto): TossResponse {
+		return tossClient.confirm(body)
+	}
 
-    @Bean("tossClient")
-    fun create(): TossPaymentOutputPort {
-        val restClient:RestClient = RestClient.builder()
-            .baseUrl("https://api.tosspayments.com/v1")
-            .defaultHeader(HttpHeaders.AUTHORIZATION, generateKey())
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build()
-        val adapter:RestClientAdapter = RestClientAdapter.create(restClient)
-        val factory:HttpServiceProxyFactory = HttpServiceProxyFactory.builderFor(adapter).build()
-        return factory.createClient(TossPaymentOutputPort::class.java)
-    }
+	override fun cancel(paymentKey: String, body: TossPayCancelRequestDto): TossResponse {
+		TODO("Not yet implemented")
+	}
 
-    private fun generateKey(): String {
-        val encoder: Base64.Encoder = Base64.getEncoder()
-        return "Basic " + String(encoder.encode("$CLIENT_SECRET:".toByteArray(StandardCharsets.UTF_8)))
-    }
 }

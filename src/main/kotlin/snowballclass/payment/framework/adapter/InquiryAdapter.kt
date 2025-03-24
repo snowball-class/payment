@@ -4,8 +4,8 @@ import org.springframework.stereotype.Repository
 import snowballclass.payment.application.output.InquiryOutputPort
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
-import snowballclass.payment.framework.adapter.jpa.PaymentDetailRepository
-import snowballclass.payment.framework.adapter.jpa.PaymentRepository
+import snowballclass.payment.framework.jpa.PaymentDetailRepository
+import snowballclass.payment.framework.jpa.PaymentRepository
 import java.util.UUID
 
 @Repository

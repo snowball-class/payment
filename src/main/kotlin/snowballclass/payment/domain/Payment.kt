@@ -86,5 +86,52 @@ class Payment(
                 )
             }
         }
+
+        fun sample(): Payment {
+            return Payment(
+                id = 1,
+                memberUUID = UUID.randomUUID(),
+                orderId = UUID.randomUUID(),
+                paymentKey = "",
+                paymentType = PaymentType.NORMAL,
+                orderName = UUID.randomUUID().toString(),
+                amount = Amount(
+                    totalAmount = 0,
+                    balanceAmount = 0,
+                    discount = 0,
+                ),
+                paymentMethod = PaymentMethod.CARD,
+                status = PaymentStatus.AWAIT,
+                lastTransactionKey = null,
+                isPartialCancelable = false,
+                card = Card(
+                    amount = 1000,
+                    issuerCode = "05",
+                    acquirerCode = "05",
+                    number = "1234124125",
+                    installmentPlanMonths = 0,
+                    approveNo = "",
+                    useCardPoint = false,
+                    cardType = "신용",
+                    ownerType = "일반",
+                    acquireStatus = "정상",
+                    isInterestFee = false,
+                    interestPayer = "",
+                ),
+                virtualAccount = null,
+                hookSecret = "",
+                transfer = null,
+                metadata = "",
+                checkoutUrl = "",
+                failure = null,
+                cashReceipt = null,
+                easypay = null,
+                deleted = false,
+                deletedAt = null,
+                updatedAt = LocalDateTime.now(),
+                createdAt = LocalDateTime.now(),
+                paidAt = LocalDateTime.now()
+            )
+        }
     }
 }

@@ -4,5 +4,5 @@ import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.output.ConfirmPaymentOutputDto
 
 interface PaymentConfirmUsecase {
-    fun confirm(payDto: ConfirmPaymentInputDto): ConfirmPaymentOutputDto
+    fun confirm(command: ConfirmPaymentInputDto): ConfirmPaymentOutputDto
 }

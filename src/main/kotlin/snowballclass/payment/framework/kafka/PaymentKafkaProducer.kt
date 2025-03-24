@@ -1,4 +1,4 @@
-package snowballclass.payment.framework.adapter.kafka
+package snowballclass.payment.framework.kafka
 
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate

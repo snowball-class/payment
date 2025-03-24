@@ -1,23 +1,30 @@
 package snowballclass.payment.framework.adapter
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.web.client.RestClient
-import org.springframework.web.client.support.RestClientAdapter
-import org.springframework.web.service.invoker.HttpServiceProxyFactory
+import org.springframework.stereotype.Repository
 import snowballclass.payment.application.output.LessonOutputPort
+import snowballclass.payment.framework.client.LessonClient
+import snowballclass.payment.framework.web.dto.output.GetLessonOutputDto
 
-@Configuration
-class LessonAdapter {
-	@Value("\${service.lesson.url}")
-	private val lessonServiceUrl: String = ""
+@Repository
+class LessonAdapter(
+	private val lessonClient: LessonClient
+):LessonOutputPort {
+	override fun getLessonDetail(lessonId: Long): GetLessonOutputDto {
+		try {
+			return lessonClient.getLessonDetail(lessonId).data
+		} catch (e:Exception) {
+			println(e.message)
+			throw e
+		}
+	}
 
-	@Bean("lessonClient")
-	fun lessonClient(): LessonOutputPort {
-		val restClient: RestClient = RestClient.builder().baseUrl(lessonServiceUrl).build()
-		val adapter: RestClientAdapter = RestClientAdapter.create(restClient)
-		val factory: HttpServiceProxyFactory = HttpServiceProxyFactory.builderFor(adapter).build()
-		return factory.createClient(LessonOutputPort::class.java)
+	override fun bulkGetLessonDetail(ids: List<Long>): List<GetLessonOutputDto> {
+		try {
+			val idString: String = ids.joinToString(",")
+			return lessonClient.bulkGetLessonDetail(idString).data
+		} catch (e:Exception) {
+			println(e.message)
+			throw e
+		}
 	}
 }
