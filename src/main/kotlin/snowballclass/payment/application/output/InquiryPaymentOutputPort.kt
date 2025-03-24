@@ -5,7 +5,6 @@ import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import java.util.UUID
 
-@Repository
 interface InquiryPaymentOutputPort {
     fun getPayment(orderId:UUID): Payment
     fun getPaymentList(memberUUID:UUID): List<Payment>

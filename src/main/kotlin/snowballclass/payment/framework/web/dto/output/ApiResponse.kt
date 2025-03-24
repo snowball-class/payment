@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 class ApiResponse<T>(
-	val message: String = "",
+	val message: String?,
 	val status: HttpStatus,
 	val data: T
 ) {

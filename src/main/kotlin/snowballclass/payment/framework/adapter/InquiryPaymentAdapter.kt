@@ -1,5 +1,6 @@
 package snowballclass.payment.framework.adapter
 
+import org.springframework.stereotype.Repository
 import snowballclass.payment.application.exception.EntityNotFoundException
 import snowballclass.payment.application.exception.ErrorCode
 import snowballclass.payment.application.output.InquiryPaymentOutputPort
@@ -9,6 +10,7 @@ import snowballclass.payment.framework.jpa.PaymentDetailRepository
 import snowballclass.payment.framework.jpa.PaymentRepository
 import java.util.UUID
 
+@Repository
 class InquiryPaymentAdapter(
     private val paymentRepository: PaymentRepository,
     private val paymentDetailRepository: PaymentDetailRepository,
