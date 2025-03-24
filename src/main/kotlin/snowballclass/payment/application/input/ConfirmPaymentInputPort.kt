@@ -5,9 +5,9 @@ import org.springframework.transaction.annotation.Transactional
 import snowballclass.payment.application.exception.ErrorCode
 import snowballclass.payment.application.exception.payment.FailedConfirmPaymentException
 import snowballclass.payment.application.output.LessonOutputPort
-import snowballclass.payment.application.output.PaymentConfirmOutputPort
+import snowballclass.payment.application.output.ConfirmPaymentOutputPort
 import snowballclass.payment.application.output.TossPaymentOutputPort
-import snowballclass.payment.application.usecase.PaymentConfirmUsecase
+import snowballclass.payment.application.usecase.ConfirmPaymentUsecase
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.framework.web.dto.domain.CreatePaymentDetailDto
@@ -17,11 +17,11 @@ import snowballclass.payment.framework.web.dto.output.ConfirmPaymentOutputDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
 
 @Service
-class PaymentConfirmInputPort(
-    private val paymentConfirmOutputPort: PaymentConfirmOutputPort,
+class ConfirmPaymentInputPort(
+    private val confirmPaymentOutputPort: ConfirmPaymentOutputPort,
     private val lessonOutputPort: LessonOutputPort,
     private val tossPaymentOutputPort: TossPaymentOutputPort
-):PaymentConfirmUsecase {
+):ConfirmPaymentUsecase {
     /**
      * 결제 flow
      * c: client, p: pg사, s: server
@@ -33,12 +33,12 @@ class PaymentConfirmInputPort(
             requestTossPaymentConfirm(orderId, paymentKey, amount)
         }
 
-        val payment = paymentConfirmOutputPort.savePayment(Payment.create(command, tossResponse))
+        val payment = confirmPaymentOutputPort.savePayment(Payment.create(command, tossResponse))
             .also { payment ->
                 // lesson 기반으로 주문상세 만들고 저장
                 lessonOutputPort.bulkGetLessonDetail(command.lessonIdList).map {
                     PaymentDetail.create(payment, CreatePaymentDetailDto(it.toLesson()))
-                }.also (paymentConfirmOutputPort::saveAll)
+                }.also (confirmPaymentOutputPort::saveAll)
             }
 
         return ConfirmPaymentOutputDto.from(payment)

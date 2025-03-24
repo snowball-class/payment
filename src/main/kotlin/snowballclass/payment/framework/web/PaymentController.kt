@@ -3,15 +3,14 @@ package snowballclass.payment.framework.web
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import snowballclass.payment.application.usecase.CancelUsecase
-import snowballclass.payment.application.usecase.InquiryUsecase
-import snowballclass.payment.application.usecase.PaymentConfirmUsecase
+import snowballclass.payment.application.usecase.CancelPaymentUsecase
+import snowballclass.payment.application.usecase.InquiryPaymentUsecase
+import snowballclass.payment.application.usecase.ConfirmPaymentUsecase
 import snowballclass.payment.framework.web.dto.input.CancelPaymentInputDto
 import snowballclass.payment.framework.web.dto.output.ApiResponse
 import snowballclass.payment.framework.web.dto.output.GetPaymentOutputDto
@@ -22,9 +21,9 @@ import java.util.UUID
 @Tag(name = "결제 API", description = "Payment")
 @RestController
 class PaymentController(
-    private val paymentConfirmUsecase: PaymentConfirmUsecase,
-    private val cancelUsecase: CancelUsecase,
-    private val inquiryUsecase: InquiryUsecase,
+    private val confirmPaymentUsecase: ConfirmPaymentUsecase,
+    private val cancelPaymentUsecase: CancelPaymentUsecase,
+    private val inquiryPaymentUsecase: InquiryPaymentUsecase,
 ) {
     @Operation(summary = "결제 요청 API", description = "결제 요청 시 Lesson 에 대한 정보가 필수 입니다")
     @PostMapping("/payment/confirm")
@@ -33,7 +32,7 @@ class PaymentController(
     ):ApiResponse<ConfirmPaymentOutputDto> {
         return ApiResponse.success(
             message = "결제 요청 완료",
-            data = paymentConfirmUsecase.confirm(body)
+            data = confirmPaymentUsecase.confirm(body)
         )
     }
 
@@ -44,7 +43,7 @@ class PaymentController(
     ):ApiResponse<List<GetPaymentOutputDto>> {
         return ApiResponse.success(
             message = "목록 조회 완료",
-            data = inquiryUsecase.getPaymentList(memberUUID = memberUUID)
+            data = inquiryPaymentUsecase.getPaymentList(memberUUID = memberUUID)
         )
     }
 
@@ -55,7 +54,7 @@ class PaymentController(
     ): ApiResponse<GetPaymentOutputDto> {
         return ApiResponse.success(
             message = "상세 조회 완료",
-            data = inquiryUsecase.getPayment(orderId = orderId)
+            data = inquiryPaymentUsecase.getPayment(orderId = orderId)
         )
     }
 
@@ -67,7 +66,7 @@ class PaymentController(
     ):ApiResponse<Boolean> {
         return ApiResponse.success(
             message = "결제 취소 완료",
-            data = cancelUsecase.cancel(orderId = orderId, cancelPaymentInputDto = cancelPaymentInputDto)
+            data = cancelPaymentUsecase.cancel(orderId = orderId, cancelPaymentInputDto = cancelPaymentInputDto)
         )
     }
 }

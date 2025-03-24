@@ -4,6 +4,6 @@ import org.springframework.stereotype.Component
 import snowballclass.payment.domain.model.event.PaymentConfirmed
 
 @Component
-interface EventOutputPort {
+interface PaymentEventOutputPort {
 	fun confirmPayment(paymentConfirmed: PaymentConfirmed)
 }

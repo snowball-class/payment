@@ -2,17 +2,17 @@ package snowballclass.payment.framework.adapter
 
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import snowballclass.payment.application.output.PaymentConfirmOutputPort
+import snowballclass.payment.application.output.ConfirmPaymentOutputPort
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.framework.jpa.PaymentDetailRepository
 import snowballclass.payment.framework.jpa.PaymentRepository
 
 @Repository
-class PaymentConfirmAdapter(
+class ConfirmPaymentAdapter(
     private val paymentRepository: PaymentRepository,
     private val paymentDetailRepository: PaymentDetailRepository,
-):PaymentConfirmOutputPort {
+):ConfirmPaymentOutputPort {
     @Transactional
     override fun savePayment(payment:Payment):Payment {
         return paymentRepository.save(payment)

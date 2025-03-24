@@ -3,10 +3,10 @@ package snowballclass.payment.application.input
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
-import snowballclass.payment.application.output.PaymentCancelOutputPort
-import snowballclass.payment.application.output.InquiryOutputPort
+import snowballclass.payment.application.output.CancelPaymentOutputPort
+import snowballclass.payment.application.output.InquiryPaymentOutputPort
 import snowballclass.payment.application.output.TossPaymentOutputPort
-import snowballclass.payment.application.usecase.CancelUsecase
+import snowballclass.payment.application.usecase.CancelPaymentUsecase
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.domain.model.vo.PaymentStatus
@@ -20,14 +20,14 @@ import snowballclass.payment.application.exception.payment.TossPaymentInternalSe
 import java.util.*
 
 @Service
-class CancelInputPort(
-    private val inquiryOutputPort: InquiryOutputPort,
-    private val paymentCancelOutputPort: PaymentCancelOutputPort,
+class CancelPaymentPaymentInputPort(
+    private val inquiryPaymentOutputPort: InquiryPaymentOutputPort,
+    private val cancelPaymentOutputPort: CancelPaymentOutputPort,
     private val tossPaymentOutputPort: TossPaymentOutputPort
-):CancelUsecase {
+):CancelPaymentUsecase {
     @Transactional
     override fun cancel(orderId:UUID, cancelPaymentInputDto:CancelPaymentInputDto):Boolean {
-        val payment:Payment = inquiryOutputPort.getPayment(orderId = orderId)
+        val payment:Payment = inquiryPaymentOutputPort.getPayment(orderId = orderId)
             .also(::validatePartialCancelable)
 
         val paymentDetailList:List<PaymentDetail> = bulkGetPaymentDetails(cancelPaymentInputDto.paymentDetailList)
@@ -47,7 +47,7 @@ class CancelInputPort(
 
         // tossResponse 정상일 시 paymentCancel 저장 -> TODO : 토스 응답 정상이면 이벤트 발행 -> Consumer 생성 필요
         tossResponse.lastTransactionKey?.let {
-            paymentCancelOutputPort.save(payment, cancelPaymentInputDto.cancelReason, cancelAmount, it)
+            cancelPaymentOutputPort.save(payment, cancelPaymentInputDto.cancelReason, cancelAmount, it)
         } ?: InvalidPartialCancelException(ErrorCode.INVALID_TRANSACTION_KEY)
 
         return true
@@ -56,13 +56,13 @@ class CancelInputPort(
     // payment 의 paymentDetail 개수 조회
     @Transactional(propagation=Propagation.REQUIRED)
     fun getPaymentDetailCount(payment:Payment): Int {
-        return inquiryOutputPort.getPaymentDetailCount(payment)
+        return inquiryPaymentOutputPort.getPaymentDetailCount(payment)
     }
 
     // paymentDetail 의 벌크 조회
     @Transactional(propagation=Propagation.REQUIRED)
     fun bulkGetPaymentDetails(ids: List<Long>): List<PaymentDetail> {
-        return inquiryOutputPort.getPaymentDetailListByIdIn(ids)
+        return inquiryPaymentOutputPort.getPaymentDetailListByIdIn(ids)
     }
 
     // 취소 총액 계산

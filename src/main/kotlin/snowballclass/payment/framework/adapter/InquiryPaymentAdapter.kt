@@ -1,21 +1,21 @@
 package snowballclass.payment.framework.adapter
 
-import org.springframework.stereotype.Repository
-import snowballclass.payment.application.output.InquiryOutputPort
+import snowballclass.payment.application.exception.EntityNotFoundException
+import snowballclass.payment.application.exception.ErrorCode
+import snowballclass.payment.application.output.InquiryPaymentOutputPort
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.framework.jpa.PaymentDetailRepository
 import snowballclass.payment.framework.jpa.PaymentRepository
 import java.util.UUID
 
-@Repository
-class InquiryAdapter(
+class InquiryPaymentAdapter(
     private val paymentRepository: PaymentRepository,
     private val paymentDetailRepository: PaymentDetailRepository,
-):InquiryOutputPort {
+):InquiryPaymentOutputPort {
     override fun getPayment(orderId: UUID): Payment {
         return paymentRepository.findByOrderId(orderId).orElseThrow{
-            RuntimeException("관련 결제 건을 찾을 수 없습니다")
+            EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
         }
     }
 
