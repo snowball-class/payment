@@ -18,6 +18,7 @@ enum class ErrorCode(val status: HttpStatus, val message:String) {
 	FAILED_CONFIRM_PAYMENT(HttpStatus.INTERNAL_SERVER_ERROR, "결제 요청에 실패했습니다"),
 	ALREADY_CANCELED_PAYMENT_EXIST(HttpStatus.BAD_REQUEST, "이미 취소된 거래가 존재합니다"),
 	FAILED_CANCEL_PAYMENT(HttpStatus.INTERNAL_SERVER_ERROR, "거래 취소에 실패했습니다"),
+	CANCEL_AMOUNT_EXCEED_BALANCE(HttpStatus.BAD_REQUEST, "취소 금액이 취소 가능 금액을 초과합니다"),
 
 	// 강의
 	FAILE_REQUEST_LESSON_SERVER(HttpStatus.INTERNAL_SERVER_ERROR, "강의 서버 호출에 실패했습니다."),

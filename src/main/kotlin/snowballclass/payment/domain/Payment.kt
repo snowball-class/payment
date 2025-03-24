@@ -1,6 +1,8 @@
 package snowballclass.payment.domain
 
 import jakarta.persistence.*
+import snowballclass.payment.application.exception.ErrorCode
+import snowballclass.payment.application.exception.payment.FailedCancelPaymentException
 import snowballclass.payment.domain.model.vo.Amount
 import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.CashReceipt
@@ -56,6 +58,17 @@ class Payment(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val paidAt: LocalDateTime,
 ) {
+    fun cancel(amount:Long) {
+        val balance = this.amount.balanceAmount
+        if (balance < amount) {
+            throw FailedCancelPaymentException(ErrorCode.CANCEL_AMOUNT_EXCEED_BALANCE)
+        }
+        if (this.amount.balanceAmount == amount) {
+            this.status = PaymentStatus.CANCEL
+        }
+        this.amount.balanceAmount -= amount
+    }
+
     companion object {
         fun create(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
             return with(response) {

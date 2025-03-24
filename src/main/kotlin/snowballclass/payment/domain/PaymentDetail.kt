@@ -28,6 +28,9 @@ class PaymentDetail(
 	@Enumerated(EnumType.STRING)
 	var status: PaymentStatus = PaymentStatus.SUCCESS,
 ) {
+	fun cancel() {
+		this.status = PaymentStatus.CANCEL
+	}
 	companion object {
 		fun create(payment:Payment, createPaymentDetailDto: CreatePaymentDetailDto):PaymentDetail {
 			return PaymentDetail(

@@ -1,6 +1,9 @@
 package snowballclass.payment.framework.adapter
 
 import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestClientException
+import snowballclass.payment.application.exception.ErrorCode
+import snowballclass.payment.application.exception.payment.TossPaymentInternalServerException
 import snowballclass.payment.application.output.TossPaymentOutputPort
 import snowballclass.payment.framework.client.TossClient
 import snowballclass.payment.framework.web.dto.input.TossPayCancelRequestDto
@@ -16,7 +19,12 @@ class TossAdapter(
 	}
 
 	override fun cancel(paymentKey: String, body: TossPayCancelRequestDto): TossResponse {
-		TODO("Not yet implemented")
+		try {
+			return tossClient.cancel(paymentKey, body)
+		}
+		catch (e: RestClientException) {
+			throw TossPaymentInternalServerException(ErrorCode.TOSS_INTERNAL_SERVER_ERROR)
+		}
 	}
 
 }

@@ -20,7 +20,7 @@ import snowballclass.payment.application.exception.payment.TossPaymentInternalSe
 import java.util.*
 
 @Service
-class CancelPaymentPaymentInputPort(
+class CancelPaymentInputPort(
     private val inquiryPaymentOutputPort: InquiryPaymentOutputPort,
     private val cancelPaymentOutputPort: CancelPaymentOutputPort,
     private val tossPaymentOutputPort: TossPaymentOutputPort
@@ -34,16 +34,10 @@ class CancelPaymentPaymentInputPort(
             .also(::validateNotAlreadyCanceled)
 
         val cancelAmount: Long = calculateTotalAmount(paymentDetailList)
-
         val tossResponse = requestConfirmTossPayment(cancelPaymentInputDto.cancelReason, cancelAmount, payment.paymentKey)
 
-        // 결제 상태 변경 -> TODO : 이벤트 컨슘으로 변경
-        if (paymentDetailList.size == getPaymentDetailCount(payment)) {
-            payment.status = PaymentStatus.CANCEL
-        }
-
-        // 부분 결제 건 상태 변경 -> TODO : 이벤트 컨슘으로 변경
-        paymentDetailList.forEach { it.status = PaymentStatus.CANCEL }
+        payment.cancel(cancelAmount)
+        paymentDetailList.forEach { it.cancel() }
 
         // tossResponse 정상일 시 paymentCancel 저장 -> TODO : 토스 응답 정상이면 이벤트 발행 -> Consumer 생성 필요
         tossResponse.lastTransactionKey?.let {
@@ -86,14 +80,10 @@ class CancelPaymentPaymentInputPort(
 
     // toss 결제 요청
     private fun requestConfirmTossPayment(reason:String, amount: Long,paymentKey:String):TossResponse {
-        try {
-            val data = TossPayCancelRequestDto(
-                cancelReason = reason,
-                cancelAmount = amount
-            )
-            return tossPaymentOutputPort.cancel(paymentKey, data)
-        } catch (e: RuntimeException) {
-            throw TossPaymentInternalServerException(ErrorCode.TOSS_INTERNAL_SERVER_ERROR)
-        }
+        val data = TossPayCancelRequestDto(
+            cancelReason = reason,
+            cancelAmount = amount
+        )
+        return tossPaymentOutputPort.cancel(paymentKey, data)
     }
 }
