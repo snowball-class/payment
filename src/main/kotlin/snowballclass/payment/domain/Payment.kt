@@ -5,7 +5,6 @@ import snowballclass.payment.application.exception.ErrorCode
 import snowballclass.payment.application.exception.payment.FailedCancelPaymentException
 import snowballclass.payment.domain.model.vo.Amount
 import snowballclass.payment.domain.model.vo.Card
-import snowballclass.payment.domain.model.vo.CashReceipt
 import snowballclass.payment.domain.model.vo.Easypay
 import snowballclass.payment.domain.model.vo.Failure
 import snowballclass.payment.domain.model.vo.PaymentMethod
@@ -44,12 +43,8 @@ class Payment(
     val hookSecret: String = "",
     @Embedded
     val transfer: Transfer? = null,
-    val metadata: String = "",
-    val checkoutUrl: String = "",
     @Embedded
     val failure: Failure? = null,
-    @Embedded
-    val cashReceipt: CashReceipt? = null,
     @Embedded
     val easypay: Easypay? = null,
     var deleted: Boolean = false,
@@ -81,9 +76,8 @@ class Payment(
                     amount = Amount(
                         totalAmount = totalAmount ?: 0,
                         balanceAmount = balanceAmount ?: 0,
-                        discount = discount?.amount ?: 0,
                     ),
-                    paymentMethod = PaymentMethod.fromLabel(method ?: "카드"),
+                    paymentMethod = PaymentMethod.fromLabel (method ?: "카드"),
                     status = PaymentStatus.AWAIT,
                     lastTransactionKey = lastTransactionKey,
                     isPartialCancelable = isPartialCancelable ?: true,
@@ -91,10 +85,7 @@ class Payment(
                     virtualAccount = virtualAccount,
                     hookSecret = secret ?: "",
                     transfer = transfer,
-                    metadata = metadata.toString(),
-                    checkoutUrl = checkout?.url ?: "",
                     failure = failure,
-                    cashReceipt = cashReceipt,
                     paidAt = LocalDateTime.now(),
                 )
             }
@@ -134,10 +125,7 @@ class Payment(
                 virtualAccount = null,
                 hookSecret = "",
                 transfer = null,
-                metadata = "",
-                checkoutUrl = "",
                 failure = null,
-                cashReceipt = null,
                 easypay = null,
                 deleted = false,
                 deletedAt = null,

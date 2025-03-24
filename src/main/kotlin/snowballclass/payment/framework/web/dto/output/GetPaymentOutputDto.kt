@@ -3,7 +3,6 @@ package snowballclass.payment.framework.web.dto.output
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.domain.model.vo.Amount
-import snowballclass.payment.domain.model.vo.CashReceipt
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
 import java.time.LocalDateTime
@@ -15,7 +14,6 @@ class GetPaymentOutputDto(
 	val amount: Amount,
 	val paymentMethod: PaymentMethod,
 	val status: PaymentStatus,
-	val cashReceipt: CashReceipt?,
 	val deleted: Boolean,
 	val deletedAt: LocalDateTime?,
 	val updatedAt: LocalDateTime,
@@ -31,7 +29,6 @@ class GetPaymentOutputDto(
 				amount = payment.amount,
 				paymentMethod = payment.paymentMethod,
 				status = payment.status,
-				cashReceipt = payment.cashReceipt,
 				createdAt = payment.createdAt,
 				deleted = payment.deleted,
 				deletedAt = payment.deletedAt,
