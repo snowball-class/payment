@@ -32,11 +32,13 @@ class PaymentDetail(
 		this.status = PaymentStatus.CANCEL
 	}
 	companion object {
-		fun create(payment:Payment, createPaymentDetailDto: CreatePaymentDetailDto):PaymentDetail {
-			return PaymentDetail(
-				payment = payment,
-				lesson = createPaymentDetailDto.lesson,
-			)
+		fun create(command: CreatePaymentDetailDto):PaymentDetail {
+			return with(command) {
+				PaymentDetail(
+					payment = payment,
+					lesson = lesson,
+				)
+			}
 		}
 	}
 }

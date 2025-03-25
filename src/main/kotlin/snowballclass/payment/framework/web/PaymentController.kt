@@ -25,7 +25,7 @@ class PaymentController(
     private val cancelPaymentUsecase: CancelPaymentUsecase,
     private val inquiryPaymentUsecase: InquiryPaymentUsecase,
 ) {
-    @Operation(summary = "결제 요청 API", description = "결제 요청 시 Lesson 에 대한 정보가 필수 입니다")
+    @Operation(summary = "결제 요청 API")
     @PostMapping("/payment/confirm")
     fun pay(
         @RequestBody @Valid body: ConfirmPaymentInputDto,

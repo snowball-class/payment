@@ -7,20 +7,25 @@ import snowballclass.payment.application.exception.payment.FailedConfirmPaymentE
 import snowballclass.payment.application.output.LessonOutputPort
 import snowballclass.payment.application.output.ConfirmPaymentOutputPort
 import snowballclass.payment.application.output.TossPaymentOutputPort
+import snowballclass.payment.application.output.ViewOutputPort
 import snowballclass.payment.application.usecase.ConfirmPaymentUsecase
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
+import snowballclass.payment.domain.model.vo.Lesson
 import snowballclass.payment.framework.web.dto.domain.CreatePaymentDetailDto
 import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
 import snowballclass.payment.framework.web.dto.output.ConfirmPaymentOutputDto
+import snowballclass.payment.framework.web.dto.output.GetLessonOutputDto
 import snowballclass.payment.framework.web.dto.output.TossResponse
+import java.util.UUID
 
 @Service
 class ConfirmPaymentInputPort(
     private val confirmPaymentOutputPort: ConfirmPaymentOutputPort,
     private val lessonOutputPort: LessonOutputPort,
-    private val tossPaymentOutputPort: TossPaymentOutputPort
+    private val tossPaymentOutputPort: TossPaymentOutputPort,
+    private val viewOutputPort: ViewOutputPort,
 ):ConfirmPaymentUsecase {
     /**
      * 결제 flow
@@ -29,19 +34,26 @@ class ConfirmPaymentInputPort(
      */
     @Transactional
     override fun confirm(command: ConfirmPaymentInputDto): ConfirmPaymentOutputDto {
-        val tossResponse: TossResponse = with(command) {
-            requestTossPaymentConfirm(orderId, paymentKey, amount)
-        }
-
+        val tossResponse: TossResponse = requestTossPaymentConfirm(command.orderId, command.paymentKey, command.amount)
         val payment = confirmPaymentOutputPort.savePayment(Payment.create(command, tossResponse))
-            .also { payment ->
-                // lesson 기반으로 주문상세 만들고 저장
-                lessonOutputPort.bulkGetLessonDetail(command.lessonIdList).map {
-                    PaymentDetail.create(payment, CreatePaymentDetailDto(it.toLesson()))
-                }.also (confirmPaymentOutputPort::saveAll)
-            }
+        val lessonList: List<Lesson> = lessonOutputPort.bulkGetLessonDetail(command.lessonIdList).map(GetLessonOutputDto::toLesson)
 
+        // Payment Detail 저장
+        savePaymentDetailList(payment, lessonList)
+
+        // MemberLesson 저장
+        saveMemberLesson(command.memberUUID, lessonList)
         return ConfirmPaymentOutputDto.from(payment)
+    }
+
+    private fun saveMemberLesson(memberUUID:UUID,lessonList:List<Lesson>) {
+        viewOutputPort.addMemberLesson(memberUUID, lessonList.map{it.lessonId})
+    }
+
+    private fun savePaymentDetailList(payment:Payment, lessonList:List<Lesson>):List<PaymentDetail> {
+        return lessonList.map { lesson ->
+            PaymentDetail.create(CreatePaymentDetailDto(payment,lesson))
+        }.also(confirmPaymentOutputPort::saveAll)
     }
 
     private fun requestTossPaymentConfirm(orderId:String, paymentKey:String, amount: Long):TossResponse {
