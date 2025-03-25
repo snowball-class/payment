@@ -4,5 +4,5 @@ import snowballclass.payment.framework.web.dto.input.CancelPaymentInputDto
 import java.util.UUID
 
 interface CancelPaymentUsecase {
-    fun cancel(orderId: UUID, cancelPaymentInputDto:CancelPaymentInputDto):Boolean
+    fun cancel(token:String, orderId: UUID, request:CancelPaymentInputDto):Boolean
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 import snowballclass.payment.application.usecase.CancelPaymentUsecase
 import snowballclass.payment.application.usecase.InquiryPaymentUsecase
@@ -61,12 +62,13 @@ class PaymentController(
     @Operation(summary = "결제 취소")
     @PostMapping("/payment/{orderId}/cancel")
     fun cancel(
+        @RequestHeader token: String,
         @PathVariable orderId: UUID,
-        @RequestBody cancelPaymentInputDto: CancelPaymentInputDto
+        @RequestBody request: CancelPaymentInputDto
     ):ApiResponse<Boolean> {
         return ApiResponse.success(
             message = "결제 취소 완료",
-            data = cancelPaymentUsecase.cancel(orderId = orderId, cancelPaymentInputDto = cancelPaymentInputDto)
+            data = cancelPaymentUsecase.cancel(token, orderId, request)
         )
     }
 }

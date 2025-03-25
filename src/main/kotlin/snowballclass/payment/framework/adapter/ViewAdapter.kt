@@ -5,6 +5,7 @@ import snowballclass.payment.application.output.ViewOutputPort
 import snowballclass.payment.framework.client.ViewClient
 import snowballclass.payment.framework.web.dto.input.AddMemberLessonRequest
 import snowballclass.payment.framework.web.dto.output.AddMemberLessonResponse
+import snowballclass.payment.framework.web.dto.output.RemoveMemberLessonResponse
 import java.util.*
 
 @Repository
@@ -18,6 +19,10 @@ class ViewAdapter(
 				lessonIdList,
 			)
 		).data
+	}
+
+	override fun removeMemberLesson(memberUUID: UUID, lessonIdList: List<Long>): RemoveMemberLessonResponse {
+		TODO("Not yet implemented")
 	}
 
 }

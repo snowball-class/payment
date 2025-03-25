@@ -17,33 +17,39 @@ import snowballclass.payment.application.exception.ErrorCode
 import snowballclass.payment.application.exception.payment.AlreadyCanceledPaymentException
 import snowballclass.payment.application.exception.payment.InvalidPartialCancelException
 import snowballclass.payment.application.exception.payment.TossPaymentInternalServerException
+import snowballclass.payment.application.output.MemberOutputPort
+import snowballclass.payment.application.output.ViewOutputPort
 import java.util.*
 
 @Service
 class CancelPaymentInputPort(
     private val inquiryPaymentOutputPort: InquiryPaymentOutputPort,
     private val cancelPaymentOutputPort: CancelPaymentOutputPort,
-    private val tossPaymentOutputPort: TossPaymentOutputPort
+    private val tossPaymentOutputPort: TossPaymentOutputPort,
+    private val viewOutputPort: ViewOutputPort,
+    private val memberOutputPort: MemberOutputPort
 ):CancelPaymentUsecase {
     @Transactional
-    override fun cancel(orderId:UUID, cancelPaymentInputDto:CancelPaymentInputDto):Boolean {
+    override fun cancel(token:String, orderId:UUID, request:CancelPaymentInputDto):Boolean {
         val payment:Payment = inquiryPaymentOutputPort.getPayment(orderId = orderId)
             .also(::validatePartialCancelable)
 
-        val paymentDetailList:List<PaymentDetail> = bulkGetPaymentDetails(cancelPaymentInputDto.paymentDetailList)
+        val paymentDetailList:List<PaymentDetail> = bulkGetPaymentDetails(request.paymentDetailList)
             .also(::validateNotAlreadyCanceled)
 
         val cancelAmount: Long = calculateTotalAmount(paymentDetailList)
-        val tossResponse = requestConfirmTossPayment(cancelPaymentInputDto.cancelReason, cancelAmount, payment.paymentKey)
+        val tossResponse = requestConfirmTossPayment(request.cancelReason, cancelAmount, payment.paymentKey)
 
         payment.cancel(cancelAmount)
         paymentDetailList.forEach { it.cancel() }
 
         // tossResponse 정상일 시 paymentCancel 저장 -> TODO : 토스 응답 정상이면 이벤트 발행 -> Consumer 생성 필요
         tossResponse.lastTransactionKey?.let {
-            cancelPaymentOutputPort.save(payment, cancelPaymentInputDto.cancelReason, cancelAmount, it)
+            cancelPaymentOutputPort.save(payment, request.cancelReason, cancelAmount, it)
         } ?: InvalidPartialCancelException(ErrorCode.INVALID_TRANSACTION_KEY)
 
+        val memberUUID = memberOutputPort.getMemberInfo(token).memberUUID
+        viewOutputPort.removeMemberLesson(memberUUID, paymentDetailList.map{it.lesson.lessonId})
 
         return true
     }
