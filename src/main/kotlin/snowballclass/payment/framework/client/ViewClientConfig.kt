@@ -13,7 +13,7 @@ class ViewClientConfig {
 	private val viewServiceUrl: String = ""
 
 	@Bean("viewClient")
-	fun lessonClient(): ViewClient {
+	fun create(): ViewClient {
 		val restClient: RestClient = RestClient.builder().baseUrl(viewServiceUrl).build()
 		val adapter: RestClientAdapter = RestClientAdapter.create(restClient)
 		val factory: HttpServiceProxyFactory = HttpServiceProxyFactory.builderFor(adapter).build()
