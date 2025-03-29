@@ -1,11 +1,8 @@
 package snowballclass.payment.framework.web.dto.output
 
-import snowballclass.payment.domain.model.vo.CancelInfo
-import snowballclass.payment.domain.model.vo.Card
-import snowballclass.payment.domain.model.vo.Easypay
-import snowballclass.payment.domain.model.vo.Failure
-import snowballclass.payment.domain.model.vo.Transfer
-import snowballclass.payment.domain.model.vo.VirtualAccount
+import snowballclass.payment.domain.model.vo.*
+import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * 사용하는 속성값만 정의하였습니다.
@@ -30,7 +27,7 @@ class TossResponse(
      * 숫자, _ , - 로 이뤄짐
      * 주문을 식별
      */
-    val orderId: String,
+    val orderId: UUID,
 
     /**
      * 구매 상품명
@@ -127,8 +124,29 @@ class TossResponse(
     val failure: Failure? = null,
 ) {
     companion object {
-        fun sample() {
-
+        fun sample():TossResponse {
+            return TossResponse(
+                "",
+                PaymentType.NORMAL.name,
+                UUID.randomUUID(),
+                "샘플 주문",
+                Currency.KRW.label,
+                PaymentMethod.CARD.label,
+                5000L,
+                5000L,
+                PaymentStatus.SUCCESS.label,
+                LocalDateTime.now().toString(),
+                LocalDateTime.now().toString(),
+                "lastTransactionKey",
+                arrayListOf(),
+                true,
+                Card.sample(),
+                null,
+                "webhook-secret",
+                null,
+                null,
+                null
+            )
         }
     }
 }

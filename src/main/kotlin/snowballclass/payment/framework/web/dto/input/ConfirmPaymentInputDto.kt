@@ -11,7 +11,7 @@ class ConfirmPaymentInputDto(
 	@Schema(description = "유저 식별자", defaultValue = "UUID")
 	val memberUUID: UUID,
 	@Schema(description = "주문 식별자", defaultValue = "UUID")
-	val orderId: String,
+	val orderId: UUID,
 	@Schema(description = "주문명", defaultValue = "Kafka 특강 외 1건")
 	val orderName: String,
 	@Schema(description = "결제 식별자 from Toss API Server", defaultValue = "tgen_20250217155525SNRd5")

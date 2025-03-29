@@ -24,4 +24,23 @@ class Card(
     val isInterestFee: Boolean?,
     @Transient
     val interestPayer: String?
-):Serializable
+):Serializable {
+    companion object {
+        fun sample(): Card {
+            return Card(
+                5000,
+                "50",
+                "50",
+                "1234582919203",
+                0,
+                "1259u12512012",
+                false,
+                "신용카드",
+                "일반",
+                "정상",
+                false,
+                "고객"
+            )
+        }
+    }
+}

@@ -12,6 +12,7 @@ import snowballclass.payment.application.usecase.ConfirmPaymentUsecase
 import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
 import snowballclass.payment.domain.model.vo.Lesson
+import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.framework.web.dto.domain.CreatePaymentDetailDto
 import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
@@ -56,7 +57,7 @@ class ConfirmPaymentInputPort(
         }.also(confirmPaymentOutputPort::saveAll)
     }
 
-    private fun requestTossPaymentConfirm(orderId:String, paymentKey:String, amount: Long):TossResponse {
+    private fun requestTossPaymentConfirm(orderId:UUID, paymentKey:String, amount: Long):TossResponse {
         try {
             val data = TossPayRequestDto(
                 orderId = orderId,
@@ -66,6 +67,7 @@ class ConfirmPaymentInputPort(
             return tossPaymentOutputPort.confirm(data)
             // TODO : 에러 세분화 필요
         } catch (e: Exception) {
+            println(e)
             throw FailedConfirmPaymentException(ErrorCode.FAILED_CONFIRM_PAYMENT)
         }
     }

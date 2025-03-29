@@ -1,7 +1,9 @@
 package snowballclass.payment.framework.web.dto.input
 
-class TossPayRequestDto(
-	val orderId: String,
+import java.util.UUID
+
+data class TossPayRequestDto(
+	val orderId: UUID,
 	val paymentKey: String,
 	val amount: Long,
 )
