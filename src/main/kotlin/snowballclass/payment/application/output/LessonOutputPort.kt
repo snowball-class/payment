@@ -1,8 +1,8 @@
 package snowballclass.payment.application.output
 
-import snowballclass.payment.framework.web.dto.output.GetLessonOutputDto
+import snowballclass.payment.domain.model.vo.Lesson
 
 interface LessonOutputPort {
-	fun getLessonDetail(lessonId : Long): GetLessonOutputDto
-	fun bulkGetLessonDetail(ids: List<Long>): List<GetLessonOutputDto>
+	fun getLessonDetail(lessonId : Long): Lesson
+	fun bulkGetLessonDetail(ids: List<Long>): List<Lesson>
 }

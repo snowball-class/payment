@@ -64,6 +64,12 @@ class Payment(
         this.amount.balanceAmount -= amount
     }
 
+    @Override
+    override fun equals(other: Any?): Boolean {
+        if(other !is Payment) return false
+        return other.orderId == this.orderId && other.paymentKey == this.paymentKey
+    }
+
     companion object {
         fun create(payDto: ConfirmPaymentInputDto, response: TossResponse): Payment {
             return with(response) {

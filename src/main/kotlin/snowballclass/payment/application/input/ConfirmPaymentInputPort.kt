@@ -37,7 +37,7 @@ class ConfirmPaymentInputPort(
     override fun confirm(command: ConfirmPaymentInputDto): ConfirmPaymentOutputDto {
         val tossResponse: TossResponse = requestTossPaymentConfirm(command.orderId, command.paymentKey, command.amount)
         val payment = confirmPaymentOutputPort.savePayment(Payment.create(command, tossResponse))
-        val lessonList: List<Lesson> = lessonOutputPort.bulkGetLessonDetail(command.lessonIdList).map(GetLessonOutputDto::toLesson)
+        val lessonList: List<Lesson> = lessonOutputPort.bulkGetLessonDetail(command.lessonIdList)
 
         // Payment Detail 저장
         savePaymentDetailList(payment, lessonList)

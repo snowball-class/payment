@@ -2,21 +2,29 @@ package snowballclass.payment.application
 
 import io.kotest.core.annotation.DisplayName
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.*
+import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.Size
 import org.mockito.InjectMocks
 import snowballclass.payment.application.input.ConfirmPaymentInputPort
 import snowballclass.payment.application.output.ConfirmPaymentOutputPort
 import snowballclass.payment.application.output.LessonOutputPort
 import snowballclass.payment.application.output.TossPaymentOutputPort
 import snowballclass.payment.application.output.ViewOutputPort
+import snowballclass.payment.domain.Payment
 import snowballclass.payment.domain.PaymentDetail
-import snowballclass.payment.fixture.domain.PaymentFixture
-import snowballclass.payment.fixture.domain.model.vo.LessonFixture
+import snowballclass.payment.domain.model.vo.Lesson
+import snowballclass.payment.fixture.dto.TossResponseFixture
 import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
 import snowballclass.payment.framework.web.dto.input.TossPayRequestDto
 import snowballclass.payment.framework.web.dto.output.AddMemberLessonResponse
-import snowballclass.payment.framework.web.dto.output.TossResponse
+import snowballclass.payment.global.util.GenerateUtil
+import snowballclass.payment.global.util.getStringFormat
+import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.random.Random
 
 val confirmPaymentOutputPort: ConfirmPaymentOutputPort = mockk()
 val lessonOutputPort: LessonOutputPort = mockk()
@@ -30,36 +38,63 @@ val confirmPaymentInputPort: ConfirmPaymentInputPort = ConfirmPaymentInputPort(c
 class ConfirmPaymentInputPortTest():BehaviorSpec({
 	// confirm
     Given("토스 결제 요청 테스트") {
-        val tossResponse = TossResponse.sample()
-        val payment = PaymentFixture.EASY_PAY.toDomain()
-        val lessonList = listOf(LessonFixture.KAFKA.toDomain())
+        val memberUUID = UUID.randomUUID()
+        val paymentKey = "tgen_" + LocalDateTime.now().getStringFormat("yyyyMMdd") + GenerateUtil.generateRandomString(5)
+        val orderId = UUID.randomUUID()
+        val orderName = "생성된 주문 " + listOf(0..9).random()
+        val amount = Random.nextLong(100, 500001) / 100 * 100
+        val lessonList = listOf<Lesson>()
         val lessonIdList = lessonList.map{it.lessonId}
+
+        // fixture를 통한 생성
+        val tossResponse = TossResponseFixture.generateBeforeConfirmEntity(orderId, orderName, paymentKey, amount)
+        val payment = Payment.create(
+            ConfirmPaymentInputDto(
+                memberUUID,
+                tossResponse.orderId,
+                tossResponse.orderName,
+                tossResponse.paymentKey,
+                tossResponse.totalAmount,
+                lessonIdList
+            ),
+            tossResponse
+        )
         // stubbing
-        every { tossPaymentOutputPort.confirm(TossPayRequestDto(payment.orderId, payment.paymentKey, payment.amount.totalAmount)) } returns tossResponse
-        every { confirmPaymentOutputPort.savePayment(match{ it.orderId == payment.orderId }) } returns payment
+        every { tossPaymentOutputPort.confirm(TossPayRequestDto(orderId, paymentKey, amount)) } returns tossResponse
+        every { confirmPaymentOutputPort.savePayment(match{ it.orderId == orderId }) } returns Payment.create(
+            ConfirmPaymentInputDto(
+                memberUUID,
+                tossResponse.orderId,
+                tossResponse.orderName,
+                tossResponse.paymentKey,
+                tossResponse.totalAmount,
+                lessonIdList
+            ),
+            tossResponse
+        )
         every { lessonOutputPort.bulkGetLessonDetail(lessonIdList) } returns listOf()
         every { confirmPaymentOutputPort.saveAll(any<List<PaymentDetail>>()) } returns listOf()
-        every { viewOutputPort.addMemberLesson(payment.memberUUID, lessonIdList) } returns AddMemberLessonResponse()
+        every { viewOutputPort.addMemberLesson(memberUUID, lessonIdList) } returns AddMemberLessonResponse()
 
         // Behavior
         When("토스 결제를 요청 전체 테스트") {
             val response = confirmPaymentInputPort.confirm(
                 ConfirmPaymentInputDto(
-                    payment.memberUUID,
-                    payment.orderId,
-                    payment.orderName,
-                    payment.paymentKey,
-                    payment.amount.totalAmount,
-                    listOf(1,2,3)
+                    memberUUID,
+                    orderId,
+                    orderName,
+                    paymentKey,
+                    amount,
+                    lessonIdList
                 )
             )
 
             Then("토스에 결제 요청을 한번 수행 해야 된다") {
                 verify(exactly=1) { tossPaymentOutputPort.confirm(
                     TossPayRequestDto(
-                        payment.orderId,
-                        payment.paymentKey,
-                        payment.amount.totalAmount
+                        orderId,
+                        paymentKey,
+                        amount
                     )
                 ) }
             }
@@ -73,7 +108,11 @@ class ConfirmPaymentInputPortTest():BehaviorSpec({
                 verify(exactly=1) { confirmPaymentOutputPort.saveAll(listOf()) }
             }
             Then("연관 관계를 저장 해야 된다") {
-                verify(exactly = 1) { viewOutputPort.addMemberLesson(ofType(UUID::class), lessonIdList) }
+                verify(exactly = 1) { viewOutputPort.addMemberLesson(memberUUID, lessonIdList) }
+            }
+
+            Then("테스트 결과") {
+                response.orderId shouldBe orderId
             }
         }
     }

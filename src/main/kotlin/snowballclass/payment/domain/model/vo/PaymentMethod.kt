@@ -12,7 +12,7 @@ enum class PaymentMethod(val label:String) {
 
 	companion object {
 		fun fromLabel(label: String): PaymentMethod {
-			return PaymentMethod.entries.find { it.label == label } ?: throw RuntimeException("해당 타입을 찾을 수 없습니다")
+			return PaymentMethod.entries.find { it.label == label } ?: throw RuntimeException("해당 결제 방식을 찾을 수 없습니다")
 		}
 	}
 }

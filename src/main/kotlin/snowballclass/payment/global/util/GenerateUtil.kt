@@ -9,5 +9,11 @@ class GenerateUtil {
                 .joinToString("")
         }
 
+        fun generateRandomNumberString(length: Int): String {
+            val chars = "0123456789"
+            return (1..length)
+                .map { chars.random() }
+                .joinToString("")
+        }
     }
 }

@@ -32,7 +32,7 @@ class TossResponse(
     /**
      * 구매 상품명
      */
-    val orderName: String?,
+    val orderName: String,
 
     /**
      * 통화
@@ -48,14 +48,14 @@ class TossResponse(
     /**
      * 총 결제금액
      */
-    val totalAmount: Long?,
+    val totalAmount: Long,
 
     /**
      * 취소할 수 있는 금액
      * 결제 부분 취소 후 남은 금액
      * vat, suppliedAmount, taxFreeAmount, taxExemptionAmount 와 함께 변함
      */
-    var balanceAmount: Long?,
+    var balanceAmount: Long,
 
     /**
      * READY, IN_PROGRESS, WAITING_FOR_DEPOSIT, DONE, CANCELED, PARTIAL_CANCELED, ABORTED, EXPIRED 중 1
@@ -122,31 +122,4 @@ class TossResponse(
      * 결제 실패 정보
      */
     val failure: Failure? = null,
-) {
-    companion object {
-        fun sample():TossResponse {
-            return TossResponse(
-                "",
-                PaymentType.NORMAL.name,
-                UUID.randomUUID(),
-                "샘플 주문",
-                Currency.KRW.label,
-                PaymentMethod.CARD.label,
-                5000L,
-                5000L,
-                PaymentStatus.SUCCESS.label,
-                LocalDateTime.now().toString(),
-                LocalDateTime.now().toString(),
-                "lastTransactionKey",
-                arrayListOf(),
-                true,
-                Card.sample(),
-                null,
-                "webhook-secret",
-                null,
-                null,
-                null
-            )
-        }
-    }
-}
+)
