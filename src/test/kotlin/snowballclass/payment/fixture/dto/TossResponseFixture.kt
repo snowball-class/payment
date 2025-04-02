@@ -1,8 +1,12 @@
 package snowballclass.payment.fixture.dto
 
-import snowballclass.payment.domain.model.vo.*
+import snowballclass.payment.domain.model.vo.Card
 import snowballclass.payment.domain.model.vo.Currency
-import snowballclass.payment.framework.web.dto.output.TossResponse
+import snowballclass.payment.domain.model.vo.PaymentMethod
+import snowballclass.payment.domain.model.vo.PaymentStatus
+import snowballclass.payment.domain.model.vo.PaymentType
+import snowballclass.payment.domain.model.vo.Transfer
+import snowballclass.payment.framework.port.out.dto.TossResponse
 import snowballclass.payment.global.util.GenerateUtil
 import java.time.LocalDateTime
 import java.util.*

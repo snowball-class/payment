@@ -1,6 +1,12 @@
 package snowballclass.payment.domain
 
-import jakarta.persistence.*
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 import snowballclass.payment.application.exception.ErrorCode
 import snowballclass.payment.application.exception.payment.FailedCancelPaymentException
 import snowballclass.payment.domain.model.vo.Amount
@@ -12,10 +18,10 @@ import snowballclass.payment.domain.model.vo.PaymentStatus
 import snowballclass.payment.domain.model.vo.PaymentType
 import snowballclass.payment.domain.model.vo.Transfer
 import snowballclass.payment.domain.model.vo.VirtualAccount
-import snowballclass.payment.framework.web.dto.input.ConfirmPaymentInputDto
-import snowballclass.payment.framework.web.dto.output.TossResponse
+import snowballclass.payment.framework.port.`in`.dto.domain.ConfirmPaymentInputDto
+import snowballclass.payment.framework.port.out.dto.TossResponse
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Entity
 class Payment(
@@ -78,10 +84,10 @@ class Payment(
                     orderId = orderId,
                     paymentKey = paymentKey,
                     paymentType =  PaymentType.fromString(type ?: "NORMAL"),
-                    orderName = orderName ?: "",
+                    orderName = orderName,
                     amount = Amount(
-                        totalAmount = totalAmount ?: 0,
-                        balanceAmount = balanceAmount ?: 0,
+                        totalAmount = totalAmount,
+                        balanceAmount = balanceAmount,
                     ),
                     paymentMethod = PaymentMethod.fromLabel (method ?: "카드"),
                     status = PaymentStatus.SUCCESS,

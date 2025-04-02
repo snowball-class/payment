@@ -16,6 +16,12 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+    open-in-view: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://43.203.119.187:3306/payment?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: snowball
+    password: 1234
 
 # toss 설정
 toss:
@@ -47,4 +53,4 @@ service:
   cart:
     url: "http://snowball-class.shop:30004"
   view:
-    url: "http://snowball-class.shop:30007"
+    url: "http://localhost:8087"
