@@ -16,8 +16,8 @@ import snowballclass.payment.fixture.dto.TossResponseFixture
 import snowballclass.payment.framework.dto.`in`.ConfirmPaymentInputDto
 import snowballclass.payment.framework.dto.`in`.TossPayRequestDto
 import snowballclass.payment.framework.dto.out.AddMemberLessonResponse
+import snowballclass.payment.global.extends.getStringFormat
 import snowballclass.payment.global.util.GenerateUtil
-import snowballclass.payment.global.util.getStringFormat
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.random.Random

@@ -1,7 +1,7 @@
 package snowballclass.payment.fixture.domain.model.vo
 
-import snowballclass.payment.domain.model.vo.Amount
-import snowballclass.payment.domain.model.vo.Currency
+import snowballclass.payment.domain.vo.Amount
+import snowballclass.payment.domain.vo.Currency
 
 enum class AmountFixture(
     val currency: Currency,

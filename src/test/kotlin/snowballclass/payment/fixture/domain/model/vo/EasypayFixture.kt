@@ -1,6 +1,6 @@
 package snowballclass.payment.fixture.domain.model.vo
 
-import snowballclass.payment.domain.model.vo.Easypay
+import snowballclass.payment.domain.vo.Easypay
 
 enum class EasypayFixture(
     val provider: String,

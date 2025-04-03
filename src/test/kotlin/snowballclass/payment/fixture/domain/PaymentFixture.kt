@@ -1,9 +1,16 @@
 package snowballclass.payment.fixture.domain
 
-import snowballclass.payment.framework.port.out.jpa.entity.PaymentEntity
-import snowballclass.payment.domain.model.vo.*
+import snowballclass.payment.domain.vo.Amount
+import snowballclass.payment.domain.vo.Card
+import snowballclass.payment.domain.vo.Easypay
+import snowballclass.payment.domain.vo.Failure
+import snowballclass.payment.domain.vo.PaymentMethod
+import snowballclass.payment.domain.vo.PaymentStatus
+import snowballclass.payment.domain.vo.Transfer
+import snowballclass.payment.domain.vo.VirtualAccount
 import snowballclass.payment.fixture.domain.model.vo.AmountFixture
 import snowballclass.payment.fixture.domain.model.vo.EasypayFixture
+import snowballclass.payment.framework.port.out.jpa.entity.PaymentEntity
 import java.time.LocalDateTime
 import java.util.*
 
