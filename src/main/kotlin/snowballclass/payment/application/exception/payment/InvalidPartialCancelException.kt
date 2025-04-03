@@ -1,10 +1,10 @@
 package snowballclass.payment.application.exception.payment
 
-import snowballclass.payment.application.exception.CustomException
-import snowballclass.payment.application.exception.ErrorCode
+import snowballclass.payment.application.exception.ApplicationErrorCode
+import snowballclass.payment.application.exception.CustomApplicationException
 
 class InvalidPartialCancelException(
-    errorCode: ErrorCode,
+    applicationErrorCode: ApplicationErrorCode,
     val orderId: String = "",
-): CustomException(errorCode) {
+): CustomApplicationException(applicationErrorCode) {
 }

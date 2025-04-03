@@ -1,6 +1,6 @@
 package snowballclass.payment.fixture.domain.model.vo
 
-import snowballclass.payment.domain.model.vo.Lesson
+import snowballclass.payment.domain.vo.Lesson
 
 enum class LessonFixture(
     val lessonId: Long,
@@ -11,14 +11,11 @@ enum class LessonFixture(
     KAFKA(1L,"카프카 강의", 50000L, 50000L),
     REDIS(2L, "레디스 강의", 40000L, 40000L);
 
-    fun toDomain(): Lesson {
+    fun toDomain(): snowballclass.payment.domain.vo.Lesson {
         return with(this) {
-            Lesson(
-                lessonId,
-                title,
-                amount,
-                totalAmount
-            )
+	        snowballclass.payment.domain.vo.Lesson(
+		        lessonId, title, amount, totalAmount
+	        )
         }
     }
 }

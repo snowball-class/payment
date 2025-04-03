@@ -1,8 +1,8 @@
 package snowballclass.payment.application.exception.payment
 
-import snowballclass.payment.application.exception.CustomException
-import snowballclass.payment.application.exception.ErrorCode
+import snowballclass.payment.application.exception.CustomApplicationException
+import snowballclass.payment.application.exception.ApplicationErrorCode
 
 class TossPaymentInternalServerException(
-	errorCode: ErrorCode
-): CustomException(errorCode) {}
+	applicationErrorCode: ApplicationErrorCode
+): CustomApplicationException(applicationErrorCode) {}

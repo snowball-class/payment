@@ -1,12 +1,11 @@
 package snowballclass.payment.fixture.dto
 
 import snowballclass.payment.domain.model.vo.Card
-import snowballclass.payment.domain.model.vo.Currency
 import snowballclass.payment.domain.model.vo.PaymentMethod
 import snowballclass.payment.domain.model.vo.PaymentStatus
-import snowballclass.payment.domain.model.vo.PaymentType
+import snowballclass.payment.domain.vo.PaymentType
 import snowballclass.payment.domain.model.vo.Transfer
-import snowballclass.payment.framework.port.out.dto.TossResponse
+import snowballclass.payment.framework.dto.out.TossResponse
 import snowballclass.payment.global.util.GenerateUtil
 import java.time.LocalDateTime
 import java.util.*
@@ -14,7 +13,7 @@ import kotlin.random.Random
 
 class TossResponseFixture() {
     companion object {
-        fun generateBeforeConfirmEntity(orderId: UUID, orderName: String, paymentKey:String, totalAmount: Long):TossResponse {
+        fun generateBeforeConfirmEntity(orderId: UUID, orderName: String, paymentKey:String, totalAmount: Long): TossResponse {
             val response = when(Random.nextInt(0,3)) {
                 0 -> generateCardPayment(orderId, orderName, paymentKey, totalAmount)
                 1 -> generateEasypayPayment(orderId, orderName, paymentKey, totalAmount)
@@ -24,7 +23,7 @@ class TossResponseFixture() {
             return response
         }
 
-        private fun generateCardPayment(orderId: UUID, orderName: String, paymentKey:String, amount: Long):TossResponse {
+        private fun generateCardPayment(orderId: UUID, orderName: String, paymentKey:String, amount: Long): TossResponse {
             val cardCode:String = Random.nextLong(0, 51).let { if (it<10) "0$it" else it.toString() }
             return TossResponse(
                 paymentKey,
@@ -66,7 +65,7 @@ class TossResponseFixture() {
             )
         }
 
-        private fun generateEasypayPayment(orderId: UUID, orderName: String, paymentKey:String, amount: Long):TossResponse {
+        private fun generateEasypayPayment(orderId: UUID, orderName: String, paymentKey:String, amount: Long): TossResponse {
             return TossResponse(
                 paymentKey,
                 PaymentType.NORMAL.name,
@@ -94,7 +93,7 @@ class TossResponseFixture() {
             )
         }
 
-        private fun generateTransferPayment(orderId: UUID, orderName: String, paymentKey:String, amount: Long):TossResponse {
+        private fun generateTransferPayment(orderId: UUID, orderName: String, paymentKey:String, amount: Long): TossResponse {
             return TossResponse(
                 paymentKey,
                 PaymentType.NORMAL.name,

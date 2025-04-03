@@ -5,31 +5,30 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.*
 import org.mockito.InjectMocks
-import snowballclass.payment.application.port.`in`.service.ConfirmPaymentInputPort
-import snowballclass.payment.application.port.out.ConfirmPaymentOutputPort
-import snowballclass.payment.application.port.out.LessonOutputPort
-import snowballclass.payment.application.port.out.TossPaymentOutputPort
-import snowballclass.payment.application.port.out.ViewOutputPort
-import snowballclass.payment.domain.Payment
-import snowballclass.payment.domain.PaymentDetail
-import snowballclass.payment.domain.model.vo.Lesson
+import snowballclass.payment.application.usecase.ConfirmPaymentUsecase
+import snowballclass.payment.application.port.out.ConfirmPaymentOutPort
+import snowballclass.payment.application.port.out.LessonOutPort
+import snowballclass.payment.application.port.out.TossPaymentOutPort
+import snowballclass.payment.application.port.out.ViewOutPort
+import snowballclass.payment.framework.port.out.jpa.entity.PaymentEntity
+import snowballclass.payment.framework.port.out.jpa.entity.PaymentDetailEntity
 import snowballclass.payment.fixture.dto.TossResponseFixture
-import snowballclass.payment.framework.port.`in`.dto.domain.ConfirmPaymentInputDto
-import snowballclass.payment.framework.port.`in`.dto.domain.TossPayRequestDto
-import snowballclass.payment.framework.port.out.dto.AddMemberLessonResponse
+import snowballclass.payment.framework.dto.`in`.ConfirmPaymentInputDto
+import snowballclass.payment.framework.dto.`in`.TossPayRequestDto
+import snowballclass.payment.framework.dto.out.AddMemberLessonResponse
 import snowballclass.payment.global.util.GenerateUtil
 import snowballclass.payment.global.util.getStringFormat
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.random.Random
 
-val confirmPaymentOutputPort: ConfirmPaymentOutputPort = mockk()
-val lessonOutputPort: LessonOutputPort = mockk()
-val tossPaymentOutputPort: TossPaymentOutputPort = mockk()
-val viewOutputPort: ViewOutputPort = mockk()
+val confirmPaymentOutPort: ConfirmPaymentOutPort = mockk()
+val lessonOutPort: LessonOutPort = mockk()
+val tossPaymentOutPort: TossPaymentOutPort = mockk()
+val viewOutPort: ViewOutPort = mockk()
 
 @InjectMocks
-val confirmPaymentInputPort: ConfirmPaymentInputPort = ConfirmPaymentInputPort(confirmPaymentOutputPort,lessonOutputPort,tossPaymentOutputPort, viewOutputPort)
+val confirmPaymentUsecase: ConfirmPaymentUsecase = ConfirmPaymentUsecase(confirmPaymentOutPort,lessonOutPort,tossPaymentOutPort, viewOutPort)
 
 @DisplayName("토스 결제 승인 테스트")
 class ConfirmPaymentInputPortTest():BehaviorSpec({
@@ -40,12 +39,12 @@ class ConfirmPaymentInputPortTest():BehaviorSpec({
         val orderId = UUID.randomUUID()
         val orderName = "생성된 주문 " + listOf(0..9).random()
         val amount = Random.nextLong(100, 500001) / 100 * 100
-        val lessonList = listOf<Lesson>()
+        val lessonList = listOf<snowballclass.payment.domain.vo.Lesson>()
         val lessonIdList = lessonList.map{it.lessonId}
 
         // fixture를 통한 생성
         val tossResponse = TossResponseFixture.generateBeforeConfirmEntity(orderId, orderName, paymentKey, amount)
-        val payment = Payment.create(
+        val paymentEntity = PaymentEntity.create(
             ConfirmPaymentInputDto(
                 memberUUID,
                 tossResponse.orderId,
@@ -57,8 +56,8 @@ class ConfirmPaymentInputPortTest():BehaviorSpec({
             tossResponse
         )
         // stubbing
-        every { tossPaymentOutputPort.confirm(TossPayRequestDto(orderId, paymentKey, amount)) } returns tossResponse
-        every { confirmPaymentOutputPort.savePayment(match{ it.orderId == orderId }) } returns Payment.create(
+        every { tossPaymentOutPort.confirm(TossPayRequestDto(orderId, paymentKey, amount)) } returns tossResponse
+        every { confirmPaymentOutPort.savePayment(match{ it.orderId == orderId }) } returns PaymentEntity.create(
             ConfirmPaymentInputDto(
                 memberUUID,
                 tossResponse.orderId,
@@ -69,13 +68,13 @@ class ConfirmPaymentInputPortTest():BehaviorSpec({
             ),
             tossResponse
         )
-        every { lessonOutputPort.bulkGetLessonDetail(lessonIdList) } returns listOf()
-        every { confirmPaymentOutputPort.saveAll(any<List<PaymentDetail>>()) } returns listOf()
-        every { viewOutputPort.addMemberLesson(memberUUID, lessonIdList) } returns AddMemberLessonResponse()
+        every { lessonOutPort.bulkGetLessonDetail(lessonIdList) } returns listOf()
+        every { confirmPaymentOutPort.saveAll(any<List<PaymentDetailEntity>>()) } returns listOf()
+        every { viewOutPort.addMemberLesson(memberUUID, lessonIdList) } returns AddMemberLessonResponse()
 
         // Behavior
         When("토스 결제를 요청 전체 테스트") {
-            val response = confirmPaymentInputPort.confirm(
+            val response = confirmPaymentUsecase.confirm(
                 ConfirmPaymentInputDto(
                     memberUUID,
                     orderId,
@@ -87,7 +86,7 @@ class ConfirmPaymentInputPortTest():BehaviorSpec({
             )
 
             Then("토스에 결제 요청을 한번 수행 해야 된다") {
-                verify(exactly=1) { tossPaymentOutputPort.confirm(
+                verify(exactly=1) { tossPaymentOutPort.confirm(
                     TossPayRequestDto(
                         orderId,
                         paymentKey,
@@ -96,16 +95,16 @@ class ConfirmPaymentInputPortTest():BehaviorSpec({
                 ) }
             }
             Then("결제 정보를 저장 해야 된다") {
-                verify(exactly=1) { confirmPaymentOutputPort.savePayment(payment) }
+                verify(exactly=1) { confirmPaymentOutPort.savePayment(paymentEntity) }
             }
             Then("강의 정보를 불러 와야 한다") {
-                verify(exactly=1) { lessonOutputPort.bulkGetLessonDetail(lessonIdList) }
+                verify(exactly=1) { lessonOutPort.bulkGetLessonDetail(lessonIdList) }
             }
             Then("결제 상세 정보를 저장 해야 된다") {
-                verify(exactly=1) { confirmPaymentOutputPort.saveAll(listOf()) }
+                verify(exactly=1) { confirmPaymentOutPort.saveAll(listOf()) }
             }
             Then("연관 관계를 저장 해야 된다") {
-                verify(exactly = 1) { viewOutputPort.addMemberLesson(memberUUID, lessonIdList) }
+                verify(exactly = 1) { viewOutPort.addMemberLesson(memberUUID, lessonIdList) }
             }
 
             Then("테스트 결과") {
